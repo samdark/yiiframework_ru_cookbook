@@ -158,7 +158,7 @@ class FilmCollection extends CList {
     private $totalCount;
 
     // Задаём тип параметра Film.
-    // При попытке добаления объекта другого типа
+    // При попытке добавления объекта другого типа
     // произойдёт ошибка.
     public function add(Film $item){
         parent::add($item);

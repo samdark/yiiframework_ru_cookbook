@@ -43,7 +43,7 @@ class UserForm extends CFormModel {
 		);
     }
 
-    function afterValidate(){
+    public function afterValidate(){
         // Модель проверена и наполнена.
         // Получаем fullName:
         $this->fullName = $this->firstName.' '.$this->lastName;
