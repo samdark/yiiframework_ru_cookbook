@@ -1,0 +1,116 @@
+AJAX в Yii
+==========
+
+В качестве примера AJAX в Yii разберём асинхронную обработку формы.
+
+Контроллер
+----------
+
+Создадим новый контроллер AjaxController. Запустить его можно будет как `http://localhost/ajax/`.
+~~~
+[php]
+class AjaxController extends CController {
+	// actionIndex вызывается всегда, когда action не указан явно.
+	function actionIndex(){
+		$input = $_POST['input'];
+		// для примера будем приводить строку к верхнему регистру
+		$output = mb_strtoupper($input, 'utf-8');
+
+        // если запрос асинхронный, то нам нужно отдать только данные
+		if(Yii::app()->request->isAjaxRequest){
+			echo CHtml::encode($output);
+			// Завершаем приложение
+			Yii::app()->end();
+		}
+		else {
+            // если запрос не асинхронный, отдаём форму полностью
+			$this->render('form', array(
+				'input'=>$input,
+				'output'=>$output,
+			));
+		}
+    }
+}
+~~~
+
+Форма
+-----
+
+Теперь опишем форму:
+~~~
+[php]
+<?php echo CHtml::form();
+
+echo CHtml::label('Текст', 'input');
+echo CHtml::textArea('input', $input);
+
+echo CHtml::label('Результат', 'output');
+// name и id для textarea автоматически заданы как 'output'.
+echo CHtml::textArea('output', $output);
+
+// Второй параметр пуст, значит отсылаем данные на тот же URL.
+// Третий параметр задаёт опции запроса. Подробнее с ними можно
+// ознакомиться в документации jQuery.
+echo CHtml::ajaxSubmitButton('Обработать', '', array(
+    'type' => 'POST',
+    // Результат запроса записываем в элемент, найденный
+    // по CSS-селектору #output.
+    'update' => '#output',
+),
+array(
+    // Меняем тип элемента на submit, чтобы у пользователей
+    // с отключенным JavaScript всё было хорошо.
+    'type' => 'submit'
+));
+
+echo CHtml::endForm();?>
+~~~
+
+> Note|Примечание: Если на странице с [CHtml::ajaxSubmitButton] вне формы присутствуют
+другие AJAX-элементы, такие как [CHtml::ajaxLink], им следует задать id вручную,
+используя параметр `htmlOptions`. В противном случае после отправки формы возможно
+пересечение id и, соответственно, неверная реакция на действия пользователя.
+
+AJAX фильтр
+-----------
+
+Для удобства проверки асинхронного запроса, в Yii есть
+соответствующий фильтр.
+
+Дополним контроллер, добавив ограничения на экшн index:
+~~~
+[php]
+class AjaxController extends CController {
+    public function filters() {
+        return array(
+            'ajaxOnly + index',
+        );
+    }
+}
+~~~
+
+AJAX и CSRF
+-----------
+
+Если вы используете защиту от CSRF, в запрос необходимо передать параметр `Yii::app()->request->csrfTokenName`
+со значением `Yii::app()->request->csrfToken`. Например, для ссылки на удаление
+статьи, код будет выглядеть так:
+
+~~~
+[php]
+<?=CHtml::linkButton('Удалить', array(
+    'submit'=>array(
+        'articles/delete',
+        'id' => $Article->articleId
+    ),
+    'params'=>array(
+        Yii::app()->request->csrfTokenName => Yii::app()->request->csrfToken
+    ),
+    'confirm'=>"Точно удалить?"
+))?>
+~~~
+
+---
+  - `Автор`: Александр Макаров, Sam Dark ([rmcreative.ru](http://rmcreative.ru/))
+  - `Дополнения`: [mc-bear](http://yiiframework.ru/forum/memberlist.php?mode=viewprofile&u=58), [delvin](http://yiiframework.ru/forum/memberlist.php?mode=viewprofile&u=645)
+  - `Обсуждение и комментарии`: [http://yiiframework.ru/forum/viewtopic.php?f=8&t=56](http://yiiframework.ru/forum/viewtopic.php?f=8&t=56)

@@ -1,0 +1,117 @@
+Выполнение действий по cron-у
+=============================
+
+Есть два cпособа запустить код по cron-у:
+
+ - Эмулировать браузер.
+ - Использовать консольное приложение.
+ 
+Эмуляция браузера
+-----------------
+
+Самый простой способ. С его помощью использовать существующий метод контроллера.
+
+На крон ставится одна из следующих команд:
+~~~
+GET http://example.com/cron/
+~~~
+
+~~~
+wget -O - http://example.com/cron/
+~~~
+
+~~~
+lynx --dump http://example.com/cron/ >/dev/null
+~~~
+
+Данный способ имеет большой минус: если по крону выполняются достаточно
+затратные действия, кто угодно при знании URL сможет сильно нагрузить сервер.
+
+Конечно, можно проверить какой-нибудь параметр непосредственно в действии контроллера:
+~~~
+[php]
+if($_GET['key']!='my_secret_key') die();
+~~~
+
+Это несколько усложнит задачу злоумышленнику, но полностью проблемы не решит.
+
+Использование консольного приложения
+------------------------------------
+Самый правильный вариант — написать [консольное приложение](/doc/guide/ru/topics.console).
+
+Создаём команду в `/protected/commands/TestCommand.php`:
+~~~
+[php]
+class TestCommand extends CConsoleCommand {
+    public function run($args) {
+        // тут делаем то, что нам нужно
+    }
+}
+~~~
+
+Создаём входной файл `cron.php`:
+~~~
+[php]
+defined('YII_DEBUG') or define('YII_DEBUG',true);
+
+// подключаем файл инициализации Yii
+require_once('path/to/yii/framework/yii.php');
+
+// файл конфигурации будет отдельный
+$configFile='path/to/config/cron.php';
+
+// создаем и запускаем экземпляр приложения
+Yii::createConsoleApplication($configFile)->run();
+~~~
+
+Файл конфигурации:
+~~~
+[php]
+return array(
+    // У вас этот путь может отличаться. Можно подсмотреть в config/main.php.
+    'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
+    'name'=>'Cron',
+
+    'preload'=>array('log'),
+    
+    'import'=>array(
+		'application.components.*',
+		'application.models.*',
+    ),
+    // Перенаправляем журнал для cron-а в отдельные файлы
+    'components'=>array(
+		'log'=>array(
+			'class'=>'CLogRouter',
+			'routes'=>array(
+				array(
+					'class'=>'CFileLogRoute',
+                    'logFile'=>'cron.log',
+					'levels'=>'error, warning',
+				),
+				array(
+					'class'=>'CFileLogRoute',
+					'logFile'=>'cron_trace.log',
+					'levels'=>'trace',
+				),
+			),
+		),
+
+        // Соединение с СУБД
+		'db'=>array(
+			'class'=>'CDbConnection',
+			// …
+		),
+    ),
+);
+~~~
+
+
+На крон ставим:
+~~~
+php /path/to/cron.php test
+~~~
+Где `test` — имя нашей команды.
+
+---
+  - `Автор`: Александр Макаров, Sam Dark ([rmcreative.ru](http://rmcreative.ru/))
+  - `Обсуждение и комментарии`: [http://yiiframework.ru/forum/viewtopic.php?f=8&t=143](http://yiiframework.ru/forum/viewtopic.php?f=8&t=143)

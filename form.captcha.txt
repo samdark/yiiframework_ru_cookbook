@@ -1,0 +1,95 @@
+Добавляем CAPTCHA к форме
+=========================
+
+В Yii есть специальный виджет [CCaptcha], позволяющий добавить проверочную
+картинку-тест на страницу.
+
+Покажем настройку CAPTCHA на примере стандартного блога:
+`PostController::actionShow` выводит форму добавления комментария используя модель
+`Comment`. Отображение для формы хранится в `_form.php`.
+
+В отображение формы `_form.php` добавляем:
+
+~~~
+[php]
+<?if(extension_loaded('gd') && Yii::app()->user->isGuest):?>
+    <?=CHtml::activeLabelEx($model, 'verifyCode')?>
+    <?$this->widget('CCaptcha')?>
+    <?=CHtml::activeTextField($model, 'verifyCode')?>
+<?endif?>
+~~~
+
+Здесь `$model` — модель, которая используется в форме. Авторизованным пользователям
+картинку с кодом не показываем.
+
+В модель добавляем:
+
+~~~
+[php]
+class Comment extends CActiveRecord {
+    // результат проверки
+    public $verifyCode;
+    
+    function rules(){
+        return array(
+            array(
+                'verifyCode',
+                'captcha',
+                // авторизованным пользователям код можно не вводить
+                'allowEmpty'=>!Yii::app()->user->isGuest || !extension_loaded('gd')
+            ),
+        );
+    }
+    
+    function attributeLabels(){
+        return array(
+            'verifyCode' => 'Код проверки',
+        );
+    }
+}
+~~~
+
+В контроллер, который выводит форму, добавляем:
+
+~~~
+[php]
+class PostController extends CController {
+    public function filters() {
+        return array(
+            'accessControl',
+        );
+    }
+    
+    public function accessRules() {
+        return array(
+            // если используется проверка прав, не забывайте разрешить доступ к
+            // действию, отвечающему за генерацию изображения
+            array('allow',
+                'actions'=>array('captcha'),
+                'users'=>array('*'),
+            ),
+            array('deny',
+                'users'=>array('*'),
+            ),
+        );
+    }
+
+    public function actions(){
+        return array(
+            'captcha'=>array(
+                'class'=>'CCaptchaAction',
+            ),
+        );
+    }
+}
+~~~
+
+Стоит изучить
+-------------
+ - [Отличные материалы по CAPTCHA на dbhelp.ru](http://www.dbhelp.ru/category/captcha-lessons/).
+ - [CCaptcha](http://www.yiiframework.com/doc/api/CCaptcha).
+ - [CCaptchaAction](http://www.yiiframework.com/doc/api/CCaptchaAction).
+ 
+---
+ - `Автор`: Александр Макаров, Sam Dark ([rmcreative.ru](http://rmcreative.ru/)).
+ - `Обсуждение и комментарии`: [http://yiiframework.ru/forum/viewtopic.php?f=8&t=1496](http://yiiframework.ru/forum/viewtopic.php?f=8&t=1496).

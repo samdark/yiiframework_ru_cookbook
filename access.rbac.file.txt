@@ -1,0 +1,214 @@
+RBAC и описание ролей в файле
+=============================
+
+В [официальном руководстве](http://yiiframework.ru/doc/guide/ru/topics.auth)
+загрузка правил для RBAC из файла практически не разбирается.
+Восполним этот недостаток.
+
+Поставим задачу. Необходимо определить четыре роли: `guest`, `user`, `moderator`,
+`administrator` и назначить их пользователям из базы данных с соответствующим
+полем `role`. Затем проверить доступ.
+
+Первым делом настроим сам компонент. `protected/config/main.php`:
+~~~
+[php]
+'authManager' => array(
+    // Будем использовать свой менеджер авторизации
+    'class' => 'PhpAuthManager',
+    // Роль по умолчанию. Все, кто не админы, модераторы и юзеры — гости.
+    'defaultRoles' => array('guest'),
+),
+~~~
+
+Опишем `protected/config/auth.php`:
+~~~
+[php]
+return array(
+	'guest' => array(
+		'type' => CAuthItem::TYPE_ROLE,
+		'description' => 'Guest',
+		'bizRule' => null,
+		'data' => null
+	),
+	'user' => array(
+		'type' => CAuthItem::TYPE_ROLE,
+		'description' => 'User',
+		'children' => array(
+			'guest', // унаследуемся от гостя
+		),
+		'bizRule' => null,
+		'data' => null
+	),
+	'moderator' => array(
+		'type' => CAuthItem::TYPE_ROLE,
+		'description' => 'Moderator',
+		'children' => array(
+			'user',          // позволим модератору всё, что позволено пользователю
+		),
+		'bizRule' => null,
+		'data' => null
+	),
+	'administrator' => array(
+		'type' => CAuthItem::TYPE_ROLE,
+		'description' => 'Administrator',
+		'children' => array(
+			'moderator',         // позволим админу всё, что позволено модератору
+		),
+		'bizRule' => null,
+		'data' => null
+	),
+);
+~~~
+
+Сделаем, чтобы `Yii::app()->user->id` возвращала id пользователя. Для этого немного
+изменим класс `UserIdentity`. `protected/components/UserIdentity.php`:
+~~~
+[php]
+class UserIdentity extends CUserIdentity {
+    // Будем хранить id.
+    protected $_id;
+
+    // Данный метод вызывается один раз при аутентификации пользователя.
+    public function authenticate(){
+        // Производим стандартную аутентификацию, описанную в руководстве.
+        $user = User::model()->find('LOWER(login)=?', array(strtolower($this->username)));
+        if(($user===null) or (md5($this->password)!==$user->password)) {
+            $this->errorCode = self::ERROR_USERNAME_INVALID;
+        } else {
+            // В качестве идентификатора будем использовать id, а не username,
+            // как это определено по умолчанию. Обязательно нужно переопределить
+            // метод getId(см. ниже).
+            $this->_id = $user->id;
+
+            // Далее логин нам не понадобится, зато имя может пригодится
+            // в самом приложении. Используется как Yii::app()->user->name.
+            // realName есть в нашей модели. У вас это может быть name, firstName
+            // или что-либо ещё.
+            $this->username = $user->realName;
+
+            $this->errorCode = self::ERROR_NONE;
+        }
+       return !$this->errorCode;
+    }
+
+    public function getId(){
+        return $this->_id;
+    }
+}
+~~~
+
+Далее реализуем получение роли из БД при использовании `Yii::app()->user->role`.
+Для этого расширим [CWebUser]. `protected/components/WebUser.php`:
+~~~
+[php]
+class WebUser extends CWebUser {
+    private $_model = null;
+
+    function getRole() {
+        if($user = $this->getModel()){
+            // в таблице User есть поле role
+            return $user->role;
+        }
+    }
+
+    private function getModel(){
+        if (!$this->isGuest && $this->_model === null){
+            $this->_model = User::model()->findByPk($this->id, array('select' => 'role'));
+        }
+        return $this->_model;
+    }
+}
+~~~
+
+Чтобы приложение использовало наш класс `WebUser`, необходимо сконфигурировать
+компонент `user`:
+
+~~~
+[php]
+'user'=>array(
+    'class' => 'WebUser',
+    // …
+),
+~~~
+
+> Tip|Подсказка: Точно таким же способом можно переопределить любой компонент Yii.
+
+Теперь у нас есть набор ролей и мы знаем роль пользователя. Осталось связать их.
+Для этого создадим класс `PhpAuthManager`. `protected/components/PhpAuthManager.php`:
+
+~~~
+[php]
+class PhpAuthManager extends CPhpAuthManager{
+    public function init(){
+        // Иерархию ролей расположим в файле auth.php в директории config приложения
+        if($this->authFile===null){
+            $this->authFile=Yii::getPathOfAlias('application.config.auth').'.php';
+        }
+
+        parent::init();
+
+        // Для гостей у нас и так роль по умолчанию guest.
+        if(!Yii::app()->user->isGuest){
+            // Связываем роль, заданную в БД с идентификатором пользователя,
+            // возвращаемым UserIdentity.getId().
+            $this->assign(Yii::app()->user->role, Yii::app()->user->id);
+        }
+    }
+}
+~~~
+
+Теперь можно пользоваться:
+
+~~~
+[php]
+if(Yii::app()->user->checkAccess('administrator')){
+    echo "hello, I'm administrator";
+}
+~~~
+
+Также можно проверять права в методе `accessRules`, как показано [в руководстве](http://yiiframework.ru/doc/guide/ru/topics.auth).
+
+> Tip|Подсказка: не обязательно создавать `auth.php` вручную, можно воспользоваться
+  методами [CAuthManager] (Yii::app()->authManager),
+  [описанными в руководстве](http://yiiframework.ru/doc/guide/ru/topics.auth).
+  Не забудьте вызвать `Yii::app()->authManager->save()`.
+
+Приложение 1: модель `User`:
+----------------------------
+
+~~~
+[php]
+<?php
+/**
+ * Модель User
+ *
+ * @property integer $id
+ * @property string $login
+ * @property string $password
+ * @property string $role
+ */
+class User extends CActiveRecord {
+	const ROLE_ADMIN = 'administrator';
+	const ROLE_MODER = 'moderator';
+	const ROLE_USER = 'user';
+	const ROLE_BANNED = 'banned';
+
+	public static function model($className=__CLASS__){
+		return parent::model($className);
+	}
+
+	public function tableName(){
+		return 'User';
+	}
+
+	protected function beforeValidate(){
+		$this->password = md5($this->password);
+		return parent::beforeValidate();
+	}
+}
+~~~
+
+---
+  - `Автор`: Александр Макаров, Sam Dark ([rmcreative.ru](http://rmcreative.ru/))
+  - `Дополнения`: [Ekstazi](http://yiiframework.ru/forum/memberlist.php?mode=viewprofile&u=548)
+  - `Обсуждение и комментарии`: [http://yiiframework.ru/forum/viewtopic.php?f=8&t=156](http://yiiframework.ru/forum/viewtopic.php?f=8&t=156)
