@@ -1,0 +1,48 @@
+Создание пакетов js, css в Yii
+==========
+
+В yii есть возможность создания своих пакетов, включающие js и css файлы, а также возможность зависимости от других пакетов.
+
+Есть замечательный инструмент для рисования графиков на js — [highcharts](http://www.highcharts.com/ "highcharts"), но он использует фреймворк jQuery и сам jQuery не подключает.
+
+Создаём наш пакет, где указываем js и css файлы из highcharts и прописываем зависимость от jQuery (в yii jquery является встроенным пакетом).
+
+Настройка компонента в protected/main.php
+
+~~~
+[php]
+'clientScript'=>array(
+    'packages' => array(
+       'highcharts' => array(
+            'baseUrl' => '/js/highcharts/',
+            'js'=>array(YII_DEBUG ? 'highcharts.src.js' : 'highcharts.js'),
+            'css' => array('highcharts.css'),
+            'depends'=>array('jquery'),
+        ),
+    )
+)
+~~~
+
+Использование
+-------------
+
+
+Теперь вместо многострочного кода
+~~~
+[php]
+Yii::app()->clientScript
+  ->registerPackage('jquery')
+  ->registerScriptFile('/js/highcharts/highcharts.js')
+  ->registerCssFile('/js/highcharts/highcharts.css');
+
+~~~
+
+пишем лаконично
+~~~
+[php]
+Yii::app()->clientScript
+->registerPackage('highcharts');
+~~~
+
+---
+  - `Автор`: Загиров Рустам, Stamm ([zagirov.name](http://zagirov.name/))
