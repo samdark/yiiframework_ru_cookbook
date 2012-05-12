@@ -35,7 +35,7 @@ class ItemController extends Controller{
 
         if(isset($_POST['Item'])){
             $model->attributes=$_POST['Item'];
-			if($model->save()){
+            if($model->save()){
                 // отображаем успешное сообщение, обновляем страницу
                 // или перенаправляем куда-либо
                 $this->refresh();
