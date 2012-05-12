@@ -2,42 +2,45 @@
 =====================================================================================
 
 Хорошей практикой считается создание тонких контроллеров и толстых моделей
-всегда, когда только это возможно.
+всегда, когда только это возможно. Это позволяет сделать приложение более расширяемым
+и обсуждалось множество раз.
 
 Данный рецепт повторяет в точности то, что уже было описано в рецепте
-«[Как загрузить файл используя модель](http://www.yiiframework.com/)» с той лишь
-разницей, что теперь мы не будем писать код, связанный с работой с файлами
+«[Как загрузить файл используя модель](http://yiiframework.ru/doc/cookbook/ru/form.file.upload)»
+с той лишь разницей, что теперь мы не будем писать код, связанный с работой с файлами
 в контроллере, а вынесем его в модель.
 
 Кроме того в рецепте будет показана модель и контроллер для того случая,
 когда нам может понадобиться функционал не только добавления объекта модели с файлом
 (C в CRUD), но и обновления файла при редактировании уже существующего объекта модели
-(U в CRUD).
+(U в CRUD), который был создан в прошлом и хранится в базе данных.
 
 Контроллер
 ==========
 
-Контроллер обыкновенный, такой же, какой генерируется при помощи Gii. Контроллер
-не имеет понятия о том, что нужно каким-либо образом иметь дело с загружаемыми
-файлами.
+Контроллер обыкновенный, почти такой же, какой генерируется при помощи Gii. Контроллер
+не имеет понятия о том, что нужно каким-либо образом иметь дело с загружаемыми файлами.
+Всё, чем он занимается — общение с внешним миром.
 
 ~~~
 [php]
-class ItemController extends CController{
-    public function actionUpdate($id=null){
-        if($id===null)
-            $model=new Item;
-        else if(!$model=Item::model()->findById($id))
-            throw new CHttpException(404);
-        if(isset($_POST['Item'])){
-            $model->attributes=$_POST['Item'];
-            if($model->save()){
-                // добавляем флэш-сообщение о том, что элемент был успешно добавлен или обновлен
-                // редиректим на нужную страницу
-            }
-        }
-        $this->render('update',array('model'=>$model));
-    }
+class ItemController extends Controller{
+	public function actionUpdate($id=null){
+		if($id===null)
+			$model=new Item;
+		else if(!$model=Item::model()->findByPk($id))
+			throw new CHttpException(404);
+
+		if(isset($_POST['Item'])){
+			$model->attributes=$_POST['Item'];
+			if($model->save()){
+				// отображаем успешное сообщение, обновляем страницу или перенаправляем куда-либо
+				$this->refresh();
+			}
+		}
+
+		$this->render('update',array('model'=>$model));
+	}
 }
 ~~~
 
@@ -45,51 +48,91 @@ class ItemController extends CController{
 =============
 
 В представлении мы воспользуемся CActiveForm. Форму можно создавать и при помощи CHtml, но т.к.
-это уже было показано в другом рецепте, то продемонстрируем создание формы при помощи CActiveForm.
+это уже было показано в рецепте, на котором основан данный рецепт, то для разнообразия
+продемонстрируем создание формы при помощи CActiveForm.
 
 ~~~
 [php]
+<?php /* @var $this ItemController */ ?>
+<?php /* @var $model Item */ ?>
 
+<?php /* @var $form CActiveForm */ $form=$this->beginWidget('CActiveForm',array(
+	'htmlOptions'=>array('enctype'=>'multipart/form-data'),
+)); ?>
+	<div class="field">
+		<?php echo $form->labelEx($model,'title'); ?>
+		<?php echo $form->textField($model,'title'); ?>
+		<?php echo $form->error($model,'title'); ?>
+	</div>
+
+	<div class="field">
+		<?php if($model->document): ?>
+			<p><?php echo CHtml::encode($model->document); ?></p>
+		<?php endif; ?>
+		<?php echo $form->labelEx($model,'document'); ?>
+		<?php echo $form->fileField($model,'document'); ?>
+		<?php echo $form->error($model,'document'); ?>
+	</div>
+
+	<div class="button">
+		<?php echo CHtml::submitButton($model->isNewRecord ? 'Создать' : 'Сохранить'); ?>
+	</div>
+<?php $this->endWidget(); ?>
 ~~~
+
+Ничего необычного: выводим два лейбла, одно текстовое поле, одно поле для загрузки файла,
+название файла (если он уже был загружен ранее) и кнопку отправки формы.
 
 Модель
 ======
 
-Самая интересная часть рецепта и основной код по работе с файлами находится в модели.
+Основная часть рецепта. Весь код по работе с отправленным файлом находится в модели:
+валидация, обработка файла и его сохранение.
 
 ~~~
 [php]
+/**
+ * @property integer $id
+ * @property string $title
+ * @property string $document
+ */
 class Item extends CActiveRecord{
-    public $document;
+	public $document;
 
-    public function rules(){
-        array('document','file','types'=>'doc,docx,odt,pdf'),
-        array('document','unsafe'),
-    }
+	public static function model($className=__CLASS__){
+		return parent::model($className);
+	}
 
-    public function beforeSave(){
-        if(!parent::beforeSave())
-            return false;
-        return true;
-    }
+	public function tableName(){
+		return '{{item}}';
+	}
 
-    public function afterSave(){
-        if(!parent::afterSave())
-            return false;
-        return true;
-    }
+	public function rules(){
+		return array(
+			array('title','required'),
+			array('document','file','types'=>'doc,docx,xls,xlsx,odt,pdf','allowEmpty'=>true),
+			array('document','unsafe'),
+		);
+	}
+
+	public function beforeSave(){
+		if(!parent::beforeSave())
+			return false;
+
+		if($document=CUploadedFile::getInstance($this,'document'))
+		{
+			$this->deleteDocument();
+			$this->document=$document;
+			$this->document->saveAs(Yii::getPathOfAlias('webroot.media').'/'.$this->document);
+		}
+
+		return true;
+	}
+
+	public function deleteDocument(){
+		$documentPath=Yii::getPathOfAlias('webroot.media').'/'.$this->document;
+		if(is_file($documentPath))
+			unlink($documentPath);
+	}
 }
 ~~~
-
-Возможные улучшения
-===================
-
-Код в данном рецепте можно улучшить и сделать более пригодным для использования вновь
-(code reuse):
-
-- Перенести код модели по работе с файлами в поведение (behavior).
-
-Что стоить изучить еще?
-=======================
-
-- Add here.
