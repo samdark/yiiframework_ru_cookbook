@@ -26,24 +26,24 @@
 ~~~
 [php]
 class ItemController extends Controller{
-	public function actionUpdate($id=null){
-	    // в зависимости от аргумента создаем модель или ищем уже существующую
-		if($id===null)
-			$model=new Item;
-		else if(!$model=Item::model()->findByPk($id))
-			throw new CHttpException(404);
+    public function actionUpdate($id=null){
+        // в зависимости от аргумента создаем модель или ищем уже существующую
+        if($id===null)
+            $model=new Item;
+        else if(!$model=Item::model()->findByPk($id))
+            throw new CHttpException(404);
 
-		if(isset($_POST['Item'])){
-			$model->attributes=$_POST['Item'];
+        if(isset($_POST['Item'])){
+            $model->attributes=$_POST['Item'];
 			if($model->save()){
-				// отображаем успешное сообщение, обновляем страницу
-				// или перенаправляем куда-либо
-				$this->refresh();
-			}
-		}
+                // отображаем успешное сообщение, обновляем страницу
+                // или перенаправляем куда-либо
+                $this->refresh();
+            }
+        }
 
-		$this->render('update',array('model'=>$model));
-	}
+        $this->render('update',array('model'=>$model));
+    }
 }
 ~~~
 
@@ -60,26 +60,26 @@ class ItemController extends Controller{
 <?php /* @var $model Item */ ?>
 
 <?php /* @var $form CActiveForm */ $form=$this->beginWidget('CActiveForm',array(
-	'htmlOptions'=>array('enctype'=>'multipart/form-data'),
+    'htmlOptions'=>array('enctype'=>'multipart/form-data'),
 )); ?>
-	<div class="field">
-		<?php echo $form->labelEx($model,'title'); ?>
-		<?php echo $form->textField($model,'title'); ?>
-		<?php echo $form->error($model,'title'); ?>
-	</div>
+    <div class="field">
+        <?php echo $form->labelEx($model,'title'); ?>
+        <?php echo $form->textField($model,'title'); ?>
+        <?php echo $form->error($model,'title'); ?>
+    </div>
 
-	<div class="field">
-		<?php if($model->document): ?>
-			<p><?php echo CHtml::encode($model->document); ?></p>
-		<?php endif; ?>
-		<?php echo $form->labelEx($model,'document'); ?>
-		<?php echo $form->fileField($model,'document'); ?>
-		<?php echo $form->error($model,'document'); ?>
-	</div>
+    <div class="field">
+        <?php if($model->document): ?>
+            <p><?php echo CHtml::encode($model->document); ?></p>
+        <?php endif; ?>
+        <?php echo $form->labelEx($model,'document'); ?>
+        <?php echo $form->fileField($model,'document'); ?>
+        <?php echo $form->error($model,'document'); ?>
+    </div>
 
-	<div class="button">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Создать' : 'Сохранить'); ?>
-	</div>
+    <div class="button">
+        <?php echo CHtml::submitButton($model->isNewRecord ? 'Создать' : 'Сохранить'); ?>
+    </div>
 <?php $this->endWidget(); ?>
 ~~~
 
@@ -108,43 +108,43 @@ class ItemController extends Controller{
  * @property string $document
  */
 class Item extends CActiveRecord{
-	public $document;
+    public $document;
 
-	public static function model($className=__CLASS__){
-		return parent::model($className);
-	}
+    public static function model($className=__CLASS__){
+        return parent::model($className);
+    }
 
-	public function tableName(){
-		return '{{item}}';
-	}
+    public function tableName(){
+        return '{{item}}';
+    }
 
-	public function rules(){
-		return array(
-			array('title','required'),
-			array('document','file','types'=>'doc,docx,xls,xlsx,odt,pdf','allowEmpty'=>true),
-			array('document','unsafe'),
-		);
-	}
+    public function rules(){
+        return array(
+            array('title','required'),
+            array('document','file','types'=>'doc,docx,xls,xlsx,odt,pdf','allowEmpty'=>true),
+            array('document','unsafe'),
+        );
+    }
 
-	public function beforeSave(){
-		if(!parent::beforeSave())
-			return false;
+    public function beforeSave(){
+        if(!parent::beforeSave())
+            return false;
 
-		if($document=CUploadedFile::getInstance($this,'document'))
-		{
-			$this->deleteDocument();
-			$this->document=$document;
-			$this->document->saveAs(Yii::getPathOfAlias('webroot.media').'/'.$this->document);
-		}
+        if($document=CUploadedFile::getInstance($this,'document'))
+        {
+            $this->deleteDocument();
+            $this->document=$document;
+            $this->document->saveAs(Yii::getPathOfAlias('webroot.media').'/'.$this->document);
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	public function deleteDocument(){
-		$documentPath=Yii::getPathOfAlias('webroot.media').'/'.$this->document;
-		if(is_file($documentPath))
-			unlink($documentPath);
-	}
+    public function deleteDocument(){
+        $documentPath=Yii::getPathOfAlias('webroot.media').'/'.$this->document;
+        if(is_file($documentPath))
+            unlink($documentPath);
+    }
 }
 ~~~
 
