@@ -1,17 +1,21 @@
-Выполнение действий по cron-у
-=============================
+Выполнение действий по расписанию
+==================================
 
-Есть два cпособа запустить код по cron-у:
+Есть два cпособа запустить код по расписанию:
 
  - Эмулировать браузер.
  - Использовать консольное приложение.
  
+Настройка расписания в обоих случаях одинакова и отличается лишь выполняемой командой.
+В Linux и MacOS чаще всего используется [cron](http://ru.wikipedia.org/wiki/Cron),
+в Windows — [SchTasks или at](http://technet.microsoft.com/en-us/library/cc725744.aspx).
+ 
 Эмуляция браузера
 -----------------
 
-Самый простой способ. С его помощью использовать существующий метод контроллера.
+Используем существующий метод контроллера. В этом случае выполняется одна из следующих команд
+в зависимости от версии и типа ОС:
 
-На крон ставится одна из следующих команд:
 ~~~
 GET http://example.com/cron/
 ~~~
@@ -37,7 +41,9 @@ if($_GET['key']!='my_secret_key') die();
 
 Использование консольного приложения
 ------------------------------------
-Самый правильный вариант — написать [консольное приложение](/doc/guide/ru/topics.console).
+
+Самый правильный, и не менее лёгкий в реализации вариант — написать команду
+для [консольного приложения](/doc/guide/ru/topics.console).
 
 Создаём команду в `/protected/commands/TestCommand.php`:
 ~~~
@@ -49,22 +55,18 @@ class TestCommand extends CConsoleCommand {
 }
 ~~~
 
-Создаём входной файл `cron.php`:
+Копируем `protected/yiic.php` в `protected/cron.php` и указываем путь к отдельному файлу
+конфигурации. Выглядеть `cron.php` будет примерно так:
+
 ~~~
 [php]
-defined('YII_DEBUG') or define('YII_DEBUG',true);
+$yiic=dirname(__FILE__).'/../framework/yii.php';
+$config=dirname(__FILE__).'/config/cron.php';
 
-// подключаем файл инициализации Yii
-require_once('path/to/yii/framework/yii.php');
-
-// файл конфигурации будет отдельный
-$configFile='path/to/config/cron.php';
-
-// создаем и запускаем экземпляр приложения
-Yii::createConsoleApplication($configFile)->run();
+require_once($yiic);
 ~~~
 
-Файл конфигурации:
+Копируем файл конфигурации `protected/config/console.php` в `protected/config/cron.php` и правим под наши нужды:
 ~~~
 [php]
 return array(
@@ -78,7 +80,8 @@ return array(
 		'application.components.*',
 		'application.models.*',
     ),
-    // Перенаправляем журнал для cron-а в отдельные файлы
+	// Копирование yiic.php и console.php было сделано ради
+    // перенаправления журнала для cron в отдельные файлы:
     'components'=>array(
 		'log'=>array(
 			'class'=>'CLogRouter',
@@ -106,7 +109,7 @@ return array(
 ~~~
 
 
-На крон ставим:
+На выполнение ставим:
 ~~~
 php /path/to/cron.php test
 ~~~
