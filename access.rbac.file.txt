@@ -1,4 +1,4 @@
-RBAC и описание ролей в файле
+﻿RBAC и описание ролей в файле
 =============================
 
 В [официальном руководстве](http://yiiframework.ru/doc/guide/ru/topics.auth)
@@ -201,9 +201,9 @@ class User extends CActiveRecord {
 		return 'User';
 	}
 
-	protected function beforeValidate(){
+	protected function beforeSave(){
 		$this->password = md5($this->password);
-		return parent::beforeValidate();
+		return parent::beforeSave();
 	}
 }
 ~~~
