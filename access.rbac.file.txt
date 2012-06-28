@@ -201,9 +201,9 @@ class User extends CActiveRecord {
 		return 'User';
 	}
 
-	protected function beforeValidate(){
+	protected function beforeSave(){
 		$this->password = md5($this->password);
-		return parent::beforeValidate();
+		return parent::beforeSave();
 	}
 }
 ~~~
