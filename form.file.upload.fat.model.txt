@@ -27,16 +27,19 @@
 ~~~
 [php]
 class ItemController extends Controller{
-    public function actionUpdate($id=null){
+    public function actionUpdate($id=null)
+    {
         // в зависимости от аргумента создаем модель или ищем уже существующую
         if($id===null)
             $model=new Item;
         else if(!$model=Item::model()->findByPk($id))
             throw new CHttpException(404);
 
-        if(isset($_POST['Item'])){
+        if(isset($_POST['Item']))
+        {
             $model->attributes=$_POST['Item'];
-            if($model->save()){
+            if($model->save())
+            {
                 // отображаем успешное сообщение, обновляем страницу
                 // или перенаправляем куда-либо
                 $this->refresh();
@@ -114,15 +117,18 @@ class ItemController extends Controller{
 class Item extends CActiveRecord{
     public $document; // нужно обязательно объявить свойство явно
 
-    public static function model($className=__CLASS__){
+    public static function model($className=__CLASS__)
+    {
         return parent::model($className);
     }
 
-    public function tableName(){
+    public function tableName()
+    {
         return '{{item}}';
     }
 
-    public function rules(){
+    public function rules()
+    {
         return array(
             array('title','required'),
             array('document','file','types'=>'doc,docx,xls,xlsx,odt,pdf','allowEmpty'=>true),
@@ -130,7 +136,8 @@ class Item extends CActiveRecord{
         );
     }
 
-    public function beforeSave(){
+    public function beforeSave()
+    {
         if(parent::beforeSave())
         {
             if($document=CUploadedFile::getInstance($this,'document'))
@@ -145,7 +152,8 @@ class Item extends CActiveRecord{
         return false;
     }
 
-    public function deleteDocument(){
+    public function deleteDocument()
+    {
         $documentPath=Yii::getPathOfAlias('webroot.media').DIRECTORY_SEPARATOR.$this->document;
         if(is_file($documentPath))
             unlink($documentPath);
