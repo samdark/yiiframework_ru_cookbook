@@ -201,76 +201,76 @@ CREATE TABLE `tbl_item` (
  * @property string $savePath путь к директории, в которой сохраняем файлы
  */
 class UploadableFileBehavior extends CActiveRecordBehavior{
-	/**
-	 * @var string название атрибута, хранящего в себе имя файла и файл
-	 */
-	public $attributeName='document';
-	/**
-	 * @var string алиас директории, куда будем сохранять файлы
-	 */
-	public $savePathAlias='webroot.media';
-	/**
-	 * @var array сценарии валидации к которым будут добавлены правила валидации загрузки файлов
-	 */
-	public $scenarios=array('insert','update');
-	/**
-	 * @var string типы файлов, которые можно загружать (нужно для валидации)
-	 */
-	public $fileTypes='doc,docx,xls,xlsx,odt,pdf';
+    /**
+     * @var string название атрибута, хранящего в себе имя файла и файл
+     */
+    public $attributeName='document';
+    /**
+     * @var string алиас директории, куда будем сохранять файлы
+     */
+    public $savePathAlias='webroot.media';
+    /**
+     * @var array сценарии валидации к которым будут добавлены правила валидации загрузки файлов
+     */
+    public $scenarios=array('insert','update');
+    /**
+     * @var string типы файлов, которые можно загружать (нужно для валидации)
+     */
+    public $fileTypes='doc,docx,xls,xlsx,odt,pdf';
 
-	/**
-	 * Шорткат для Yii::getPathOfAlias($this->savePathAlias).DIRECTORY_SEPARATOR. Возвращает путь к директории,
-	 * в которой будут сохраняться файлы.
-	 * @return string путь к директории, в которой сохраняем файлы
-	 */
-	public function getSavePath()
-	{
-		return Yii::getPathOfAlias($this->savePathAlias).DIRECTORY_SEPARATOR;
-	}
+    /**
+     * Шорткат для Yii::getPathOfAlias($this->savePathAlias).DIRECTORY_SEPARATOR. Возвращает путь к директории,
+     * в которой будут сохраняться файлы.
+     * @return string путь к директории, в которой сохраняем файлы
+     */
+    public function getSavePath()
+    {
+        return Yii::getPathOfAlias($this->savePathAlias).DIRECTORY_SEPARATOR;
+    }
 
-	public function beforeValidate($event)
-	{
-		// валидируем вручную, потому как изменить метод rules() у $owner мы не можем и правил всего два
-		if(in_array($this->getOwner()->getScenario(),$this->scenarios))
-		{
-			// альтерантива правилу array('document','file','types'=>'...','allowEmpty'=>true)
-			$fileValidator=new CFileValidator();
-			$fileValidator->attributes=array($this->attributeName);
-			$fileValidator->types=$this->fileTypes;
-			$fileValidator->allowEmpty=true;
-			$fileValidator->validate($this->getOwner(),array($this->attributeName));
+    public function beforeValidate($event)
+    {
+        // валидируем вручную, потому как изменить метод rules() у $owner мы не можем и правил всего два
+        if(in_array($this->getOwner()->getScenario(),$this->scenarios))
+        {
+            // альтерантива правилу array('document','file','types'=>'...','allowEmpty'=>true)
+            $fileValidator=new CFileValidator();
+            $fileValidator->attributes=array($this->attributeName);
+            $fileValidator->types=$this->fileTypes;
+            $fileValidator->allowEmpty=true;
+            $fileValidator->validate($this->getOwner(),array($this->attributeName));
 
-			// альтерантива правилу array('document','unsafe')
-			$unsafeValidator=new CUnsafeValidator();
-			$unsafeValidator->attributes=array($this->attributeName);
-			$unsafeValidator->validate($this->getOwner(),array($this->attributeName));
-		}
-		return true;
-	}
+            // альтерантива правилу array('document','unsafe')
+            $unsafeValidator=new CUnsafeValidator();
+            $unsafeValidator->attributes=array($this->attributeName);
+            $unsafeValidator->validate($this->getOwner(),array($this->attributeName));
+        }
+        return true;
+    }
 
-	public function beforeSave($event)
-	{
-		if($file=CUploadedFile::getInstance($this->getOwner(),$this->attributeName))
-		{
-			$this->deleteFile(); // старый файл удалим, потому что загружаем новый
+    public function beforeSave($event)
+    {
+        if($file=CUploadedFile::getInstance($this->getOwner(),$this->attributeName))
+        {
+            $this->deleteFile(); // старый файл удалим, потому что загружаем новый
 
-			$this->getOwner()->setAttribute($this->attributeName,$file->getName());
-			$file->saveAs($this->getSavePath().$file->getName());
-		}
-		return true;
-	}
+            $this->getOwner()->setAttribute($this->attributeName,$file->getName());
+            $file->saveAs($this->getSavePath().$file->getName());
+        }
+        return true;
+    }
 
-	public function beforeDelete($event)
-	{
-		$this->deleteFile(); // удалили модель? удаляем и файл от неё
-	}
+    public function beforeDelete($event)
+    {
+        $this->deleteFile(); // удалили модель? удаляем и файл от неё
+    }
 
-	public function deleteFile()
-	{
-		$filePath=$this->getSavePath().$this->getOwner()->getAttribute($this->attributeName);
-		if(is_file($filePath))
-			unlink($filePath);
-	}
+    public function deleteFile()
+    {
+        $filePath=$this->getSavePath().$this->getOwner()->getAttribute($this->attributeName);
+        if(is_file($filePath))
+            unlink($filePath);
+    }
 }
 ~~~
 
