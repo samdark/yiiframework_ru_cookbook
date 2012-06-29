@@ -188,53 +188,55 @@ CREATE TABLE `tbl_item` (
 =========
 
 Код для работы с файлом при необходимости можно вынести в поведение ([CActiveRecordBehavior]).
-Ниже представлен рабочий пример такого поведения, которое делает всё тоже самое, что и методы модели выше:
+Ниже представлен рабочий пример такого поведения, которое делает всё тоже самое, что и модель выше:
 
 ~~~
 [php]
 class UploadableFileBehavior extends CActiveRecordBehavior{
 	/**
-	 * @var string атрибут, хранящий в себе имя файла и файл
+	 * @var string название атрибута, хранящего в себе имя файла и файл
 	 */
 	public $attributeName='document';
 	/**
 	 * @var string алиас директории, куда будем сохранять файлы
 	 */
-	public $saveAlias='webroot.media';
+	public $savePathAlias='webroot.media';
 	/**
-	 * @var array сценарии или сценарий валидации к которому будут добавлены правила валидации в AR-модель
+	 * @var array сценарии валидации к которым будут добавлены правила валидации загрузки файлов
 	 */
-	public $rulesScenarios=array('insert','update');
+	public $scenarios=array('insert','update');
 	/**
-	 * @var string возможные типы файлов (нужно для валидации)
+	 * @var string типы файлов, которые можно загружать (нужно для валидации)
 	 */
 	public $fileTypes='doc,docx,xls,xlsx,odt,pdf';
 
 	/**
-	 * Шорткат.
-	 * @return string путь для сохранения файлов
+	 * Шорткат для Yii::getPathOfAlias($this->savePathAlias).DIRECTORY_SEPARATOR. Возвращает путь к директории,
+	 * в которой будут сохраняться файлы.
+	 * @return string путь к директории, в которой сохраняем файлы
 	 */
 	public function getSavePath()
 	{
-		return Yii::getPathOfAlias($this->saveAlias).DIRECTORY_SEPARATOR;
+		return Yii::getPathOfAlias($this->savePathAlias).DIRECTORY_SEPARATOR;
 	}
 
 	public function beforeValidate($event)
 	{
 		// валидируем вручную, потому как изменить метод rules() у $owner мы не можем и правил всего два
-		if(in_array($this->getOwner()->getScenario(),$this->rulesScenarios))
+		if(in_array($this->getOwner()->getScenario(),$this->scenarios))
 		{
+			// альтерантива правилу array('document','file','types'=>'...','allowEmpty'=>true)
 			$fileValidator=new CFileValidator();
 			$fileValidator->attributes=array($this->attributeName);
 			$fileValidator->types=$this->fileTypes;
 			$fileValidator->allowEmpty=true;
 			$fileValidator->validate($this->getOwner(),array($this->attributeName));
 
+			// альтерантива правилу array('document','unsafe')
 			$unsafeValidator=new CUnsafeValidator();
 			$unsafeValidator->attributes=array($this->attributeName);
 			$unsafeValidator->validate($this->getOwner(),array($this->attributeName));
 		}
-
 		return true;
 	}
 
@@ -264,7 +266,7 @@ class UploadableFileBehavior extends CActiveRecordBehavior{
 }
 ~~~
 
-Модель стала выглядеть совсем простой и понятной:
+Модель стала выглядеть совсем просто и понятно:
 
 ~~~
 [php]
@@ -288,8 +290,8 @@ class Item extends CActiveRecord{
     {
         return array(
             array('title','required'),
-            // после генерации модели нужно убрать валидацию $document
-            // это будет мешать поведению UploadableFileBehavior
+            // после генерации модели при помощи Gii нужно убрать валидацию у $document
+            // это будет мешать правильно работать загрузке файлов и поведению UploadableFileBehavior
         );
     }
 
@@ -304,8 +306,11 @@ class Item extends CActiveRecord{
 }
 ~~~
 
-Стоит иметь ввиду, что данный рецепт имеет недостатки и является всего лишь уроком. Так, например,
-мы не учли ситуацию, когда две модели могут иметь два файла с одним и тем-же файлом.
+Заключение
+==========
+
+Стоит иметь ввиду, что данный рецепт имеет недостатки и является всего лишь примером. Так, например,
+мы не учли ситуацию, когда две разные модели могут иметь два файла с одним и тем-же файлом.
 
 ---
   - `Оригинальный рецепт`: [как загрузить файл используя модель](form.file.upload)
