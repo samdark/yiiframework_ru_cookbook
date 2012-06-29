@@ -152,6 +152,16 @@ class Item extends CActiveRecord{
         return false;
     }
 
+    public function beforeDelete()
+    {
+        if(parent::beforeDelete())
+        {
+            $this->deleteDocument();
+            return true;
+        }
+        return false;
+    }
+
     public function deleteDocument()
     {
         $documentPath=Yii::getPathOfAlias('webroot.media').DIRECTORY_SEPARATOR.$this->document;
