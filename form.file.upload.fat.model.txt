@@ -112,7 +112,7 @@ class ItemController extends Controller{
  * @property string $document
  */
 class Item extends CActiveRecord{
-    public $document;
+    public $document; // нужно обязательно объявить свойство явно
 
     public static function model($className=__CLASS__){
         return parent::model($className);
@@ -135,7 +135,8 @@ class Item extends CActiveRecord{
         {
             if($document=CUploadedFile::getInstance($this,'document'))
             {
-                $this->deleteDocument();
+                $this->deleteDocument(); // старый документ удалим, потому что загружаем новый
+
                 $this->document=$document;
                 $this->document->saveAs(Yii::getPathOfAlias('webroot.media').'/'.$this->document);
             }
