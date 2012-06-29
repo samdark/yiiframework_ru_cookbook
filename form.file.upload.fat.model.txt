@@ -264,7 +264,7 @@ class UploadableFileBehavior extends CActiveRecordBehavior{
 }
 ~~~
 
-Модель стала выглядет совсем простой и понятной:
+Модель стала выглядеть совсем простой и понятной:
 
 ~~~
 [php]
