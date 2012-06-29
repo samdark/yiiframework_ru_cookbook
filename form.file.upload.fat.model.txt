@@ -41,7 +41,7 @@ class ItemController extends Controller{
             if($model->save())
             {
                 // отображаем успешное сообщение, обновляем страницу
-                // или перенаправляем куда-либо
+                // или перенаправляем куда-либо ещё
                 $this->refresh();
             }
         }
@@ -54,9 +54,9 @@ class ItemController extends Controller{
 Представление
 =============
 
-В представлении мы воспользуемся [CActiveForm]. Форму можно создавать и при помощи [CHtml], но так как
-это уже было показано в рецепте «[Как загрузить файл используя модель](http://yiiframework.ru/doc/cookbook/ru/form.file.upload)»,
-продемонстрируем отображение формы при помощи CActiveForm.
+Форму в представлении можно создать при помощи класса [CHtml], но так как это уже было показано в рецепте
+«[Как загрузить файл используя модель](http://yiiframework.ru/doc/cookbook/ru/form.file.upload)», то мы решили
+сделать это через [CActiveForm].
 
 ~~~
 [php]
@@ -66,12 +66,14 @@ class ItemController extends Controller{
 <?php /* @var $form CActiveForm */ $form=$this->beginWidget('CActiveForm',array(
     'htmlOptions'=>array('enctype'=>'multipart/form-data'),
 )); ?>
+    <?php /* текстовое поле названия элемента */ ?>
     <div class="field">
         <?php echo $form->labelEx($model,'title'); ?>
         <?php echo $form->textField($model,'title'); ?>
         <?php echo $form->error($model,'title'); ?>
     </div>
 
+    <?php /* поле для загрузки файла */ ?>
     <div class="field">
         <?php if($model->document): ?>
             <p><?php echo CHtml::encode($model->document); ?></p>
@@ -81,31 +83,33 @@ class ItemController extends Controller{
         <?php echo $form->error($model,'document'); ?>
     </div>
 
+    <?php /* кнопка отправик */ ?>
     <div class="button">
         <?php echo CHtml::submitButton($model->isNewRecord ? 'Создать' : 'Сохранить'); ?>
     </div>
 <?php $this->endWidget(); ?>
 ~~~
 
-Отображаем две подписи (тег `<label />`), одно текстовое поле, одно поле для загрузки файла,
-название файла (если он уже был загружен ранее) и кнопку отправки формы.
+Структура формы стандартная. Отображаем две подписи (тег `<label />`), одно текстовое поле,
+одно поле для загрузки файла, название файла (если он уже был загружен ранее) и кнопку отправки формы.
+Не забываем указать в атрибуте `enctype` формы значение `multipart/form-data`.
 
 Модель
 ======
 
 Основная часть рецепта — это модель, в которой находится код, отвечающий за работу с файлом:
-валидация, обработка файла и его сохранение.
+валидация, обработка файла и его сохранение происходит в ней.
 
 Переопределяем метод [CActiveRecord::beforeSave], выполняемый перед сохранением AR-модели.
 В нём получаем экземпляр класса загруженного файла и сохраняем его в нужное место на диске.
 
 Следует обратить внимание на то, что в правилах валидации свойство `$document` помечено
 как `unsafe`. Это необходимо для того, чтобы при обновлении модели, имя файла в таблице базы
-данных сохранило своё старое значение, если новый файл не был указан в файловом поле
+данных сохранило своё старое значение если новый файл не был указан в файловом поле
 (`<input type="file" />`).
 
 Под обновлением понимается редактирование модели, то есть тогда, когда
-`CActiveRecord::getIsNewRecord()` возвращает `false` и активным сценарием является `update`.
+`CActiveRecord::getIsNewRecord()` возвращает `false` и активным сценарием по умолчанию является `update`.
 
 ~~~
 [php]
@@ -266,7 +270,10 @@ class UploadableFileBehavior extends CActiveRecordBehavior{
 }
 ~~~
 
-Модель стала выглядеть совсем просто и понятно:
+В поведении мы осуществляем те же самые действия, что и в модели чуть выше. Просто перенесли
+код из модели в поведение тем самым увеличив возможность повтороного использования кода.
+
+Модель теперь предельно простая и понятная:
 
 ~~~
 [php]
@@ -290,14 +297,15 @@ class Item extends CActiveRecord{
     {
         return array(
             array('title','required'),
-            // после генерации модели при помощи Gii нужно убрать валидацию у $document
-            // это будет мешать правильно работать загрузке файлов и поведению UploadableFileBehavior
+            // после генерации модели при помощи Gii нужно убрать валидацию у атрибута $document
+            // это будет мешать правильно работать валидации загружаемого файла и поведению UploadableFileBehavior
         );
     }
 
 	public function behaviors()
 	{
 		return array(
+		    // наше поведение для работы с файлом
 			'uploadableFile'=>array(
 				'class'=>'application.components.UploadableFileBehavior',
 			),
