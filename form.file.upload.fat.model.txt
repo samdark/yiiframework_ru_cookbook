@@ -184,7 +184,125 @@ CREATE TABLE `tbl_item` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ~~~
 
+Поведение
+=========
+
 Код для работы с файлом при необходимости можно вынести в поведение ([CActiveRecordBehavior]).
+Ниже представлен рабочий пример такого поведения, которое делает всё тоже самое, что и методы модели выше:
+
+~~~
+[php]
+class UploadableFileBehavior extends CActiveRecordBehavior{
+	/**
+	 * @var string атрибут, хранящий в себе имя файла и файл
+	 */
+	public $attributeName='document';
+	/**
+	 * @var string алиас директории, куда будем сохранять файлы
+	 */
+	public $saveAlias='webroot.media';
+	/**
+	 * @var array сценарии или сценарий валидации к которому будут добавлены правила валидации в AR-модель
+	 */
+	public $rulesScenarios=array('insert','update');
+	/**
+	 * @var string возможные типы файлов (нужно для валидации)
+	 */
+	public $fileTypes='doc,docx,xls,xlsx,odt,pdf';
+
+	/**
+	 * Шорткат.
+	 * @return string путь для сохранения файлов
+	 */
+	public function getSavePath()
+	{
+		return Yii::getPathOfAlias($this->saveAlias).DIRECTORY_SEPARATOR;
+	}
+
+	public function beforeValidate($event)
+	{
+		// валидируем вручную, потому как изменить метод rules() у $owner мы не можем и правил всего два
+		if(in_array($this->getOwner()->getScenario(),$this->rulesScenarios))
+		{
+			$fileValidator=new CFileValidator();
+			$fileValidator->attributes=array($this->attributeName);
+			$fileValidator->types=$this->fileTypes;
+			$fileValidator->allowEmpty=true;
+			$fileValidator->validate($this->getOwner(),array($this->attributeName));
+
+			$unsafeValidator=new CUnsafeValidator();
+			$unsafeValidator->attributes=array($this->attributeName);
+			$unsafeValidator->validate($this->getOwner(),array($this->attributeName));
+		}
+
+		return true;
+	}
+
+	public function beforeSave($event)
+	{
+		if($file=CUploadedFile::getInstance($this->getOwner(),$this->attributeName))
+		{
+			$this->deleteFile(); // старый файл удалим, потому что загружаем новый
+
+			$this->getOwner()->setAttribute($this->attributeName,$file->getName());
+			$file->saveAs($this->getSavePath().$file->getName());
+		}
+		return true;
+	}
+
+	public function beforeDelete($event)
+	{
+		$this->deleteFile(); // удалили модель? удаляем и файл от неё
+	}
+
+	public function deleteFile()
+	{
+		$filePath=$this->getSavePath().$this->getOwner()->getAttribute($this->attributeName);
+		if(is_file($filePath))
+			unlink($filePath);
+	}
+}
+~~~
+
+Модель стала выглядет совсем простой и понятной:
+
+~~~
+[php]
+/**
+ * @property integer $id
+ * @property string $title
+ * @property string $document
+ */
+class Item extends CActiveRecord{
+    public static function model($className=__CLASS__)
+    {
+        return parent::model($className);
+    }
+
+    public function tableName()
+    {
+        return '{{item}}';
+    }
+
+    public function rules()
+    {
+        return array(
+            array('title','required'),
+            // после генерации модели нужно убрать валидацию $document
+            // это будет мешать поведению UploadableFileBehavior
+        );
+    }
+
+	public function behaviors()
+	{
+		return array(
+			'uploadableFile'=>array(
+				'class'=>'application.components.UploadableFileBehavior',
+			),
+		);
+	}
+}
+~~~
 
 ---
   - `Оригинальный рецепт`: [как загрузить файл используя модель](form.file.upload)
