@@ -306,25 +306,25 @@ class Item extends CActiveRecord{
         );
     }
 
-	public function behaviors()
-	{
-		return array(
-		    // наше поведение для работы с файлом
-			'uploadableFile'=>array(
-				'class'=>'application.components.UploadableFileBehavior',
-				// конфигурируем нужные свойства класса UploadableFileBehavior
-				// ...
-			),
-		);
-	}
+    public function behaviors()
+    {
+        return array(
+            // наше поведение для работы с файлом
+            'uploadableFile'=>array(
+                'class'=>'application.components.UploadableFileBehavior',
+                // конфигурируем нужные свойства класса UploadableFileBehavior
+                // ...
+            ),
+        );
+    }
 }
 ~~~
 
 Заключение
 ==========
 
-Стоит иметь ввиду, что данный рецепт имеет недостатки и является всего лишь примером. Так, например,
-мы не учли ситуацию, когда две разные модели могут иметь два файла с одним и тем-же файлом.
+Стоит иметь ввиду, что данный рецепт является всего лишь примером. Так, например, мы не учли
+ситуацию, когда две разные модели могут иметь два файла с одним и тем-же файлом.
 
 ---
   - `Оригинальный рецепт`: [как загрузить файл используя модель](form.file.upload)
