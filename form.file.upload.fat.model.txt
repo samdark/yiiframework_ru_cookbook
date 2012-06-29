@@ -115,7 +115,7 @@ class ItemController extends Controller{
  * @property string $document
  */
 class Item extends CActiveRecord{
-    public $document; // нужно обязательно объявить свойство явно
+    public $document;
 
     public static function model($className=__CLASS__)
     {
