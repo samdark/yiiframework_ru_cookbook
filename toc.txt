@@ -8,7 +8,7 @@
     - [Избавляемся от index.php при использовании nginx](install.nginx)
     - [Используем несколько конфигураций в одном приложении](install.many.configs)
     - [Настройка для работы на сервере](install.production)
-    - [Выполнение действий по cron-у](install.cron)
+    - [Выполнение действий по расписанию](install.cron)
     - [Использование приложения Yii в сторонних скриптах](install.integration)
     - [HTTPS и Yii](install.https)
     - [Yii и Denwer](install.denwer)
