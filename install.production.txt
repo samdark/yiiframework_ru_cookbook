@@ -11,9 +11,6 @@
 [php]
 // отключаем отладку
 define('YII_DEBUG', false);
-// отключаем обработку исключений и ошибок
-define('YII_ENABLE_ERROR_HANDLER', false);
-define('YII_ENABLE_EXCEPTION_HANDLER', false);
 ~~~
 
 Сессия в БД
