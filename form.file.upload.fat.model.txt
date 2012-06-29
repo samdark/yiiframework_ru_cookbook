@@ -156,7 +156,7 @@ class Item extends CActiveRecord{
     {
         if(parent::beforeDelete())
         {
-            $this->deleteDocument();
+            $this->deleteDocument(); // удалили модель? удаляем и файл
             return true;
         }
         return false;
