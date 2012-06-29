@@ -131,17 +131,17 @@ class Item extends CActiveRecord{
     }
 
     public function beforeSave(){
-        if(!parent::beforeSave())
-            return false;
-
-        if($document=CUploadedFile::getInstance($this,'document'))
+        if(parent::beforeSave())
         {
-            $this->deleteDocument();
-            $this->document=$document;
-            $this->document->saveAs(Yii::getPathOfAlias('webroot.media').'/'.$this->document);
+            if($document=CUploadedFile::getInstance($this,'document'))
+            {
+                $this->deleteDocument();
+                $this->document=$document;
+                $this->document->saveAs(Yii::getPathOfAlias('webroot.media').'/'.$this->document);
+            }
+            return true;
         }
-
-        return true;
+        return false;
     }
 
     public function deleteDocument(){
@@ -150,6 +150,19 @@ class Item extends CActiveRecord{
             unlink($documentPath);
     }
 }
+~~~
+
+`DDL` таблицы для приведённой выше AR-модели:
+
+~~~
+[sql]
+DROP TABLE IF EXISTS `tbl_item`;
+CREATE TABLE `tbl_item` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `title` varchar(250) NOT NULL DEFAULT '',
+    `document` varchar(250) NOT NULL DEFAULT '',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ~~~
 
 Код для работы с файлом при необходимости можно вынести в поведение ([CActiveRecordBehavior]).
