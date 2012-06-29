@@ -304,9 +304,12 @@ class Item extends CActiveRecord{
 }
 ~~~
 
+Стоит иметь ввиду, что данный рецепт имеет недостатки и является всего лишь уроком. Так, например,
+мы не учли ситуацию, когда две модели могут иметь два файла с одним и тем-же файлом.
+
 ---
   - `Оригинальный рецепт`: [как загрузить файл используя модель](form.file.upload)
   - `Английский рецепт`: [how to upload a file using a model](http://www.yiiframework.com/wiki/2/)
   - [File upload and update / error actions](http://www.yiiframework.com/wiki/2/#c3137)
-  - `Автор`: [resurtm](http://yiiframework.ru/forum/memberlist.php?mode=viewprofile&u=1298)
+  - `Автор`: [resurtm](http://resurtm.kz/)
   - `Обсуждение и комментарии`: [тема на форуме](http://yiiframework.ru/forum/)
