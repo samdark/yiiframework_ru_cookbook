@@ -231,13 +231,16 @@ class UploadableFileBehavior extends CActiveRecordBehavior{
     {
         parent::attach($owner);
 
-        // добавляем валидатор файла, не забываем в параметрах валидатора указать значение safe как false
-        $fileValidator=CValidator::createValidator('file',$owner,$this->attributeName,array(
-            'types'=>$this->fileTypes,
-            'allowEmpty'=>true,
-            'safe'=>false,
-        ));
-        $owner->validatorList->add($fileValidator);
+        if(in_array($owner->getScenario(),$this->scenarios))
+        {
+            // добавляем валидатор файла, не забываем в параметрах валидатора указать значение safe как false
+            $fileValidator=CValidator::createValidator('file',$owner,$this->attributeName,array(
+                'types'=>$this->fileTypes,
+                'allowEmpty'=>true,
+                'safe'=>false,
+            ));
+            $owner->validatorList->add($fileValidator);
+        }
     }
 
     public function beforeSave($event)
