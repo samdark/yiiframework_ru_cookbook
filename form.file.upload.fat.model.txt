@@ -233,14 +233,14 @@ class UploadableFileBehavior extends CActiveRecordBehavior{
         // валидируем вручную, потому как изменить метод rules() у $owner мы не можем и правил всего два
         if(in_array($this->getOwner()->getScenario(),$this->scenarios))
         {
-            // альтерантива правилу array('document','file','types'=>'...','allowEmpty'=>true)
+            // альтернатива правилу array('document','file','types'=>'...','allowEmpty'=>true)
             $fileValidator=new CFileValidator();
             $fileValidator->attributes=array($this->attributeName);
             $fileValidator->types=$this->fileTypes;
             $fileValidator->allowEmpty=true;
             $fileValidator->validate($this->getOwner(),array($this->attributeName));
 
-            // альтерантива правилу array('document','unsafe')
+            // альтернатива правилу array('document','unsafe')
             $unsafeValidator=new CUnsafeValidator();
             $unsafeValidator->attributes=array($this->attributeName);
             $unsafeValidator->validate($this->getOwner(),array($this->attributeName));
@@ -327,8 +327,8 @@ class Item extends CActiveRecord{
 ситуацию, когда две разные модели могут иметь два файла с одним и тем-же файлом.
 
 ---
+  - `Автор`: [resurtm](http://resurtm.kz/)
   - `Оригинальный рецепт`: [как загрузить файл используя модель](form.file.upload)
   - `Английский рецепт`: [how to upload a file using a model](http://www.yiiframework.com/wiki/2/)
   - [File upload and update / error actions](http://www.yiiframework.com/wiki/2/#c3137)
-  - `Автор`: [resurtm](http://resurtm.kz/)
-  - `Обсуждение и комментарии`: [тема на форуме](http://yiiframework.ru/forum/)
+  - `Обсуждение и комментарии`: [тема на форуме](http://yiiframework.ru/forum/viewtopic.php?f=8&t=7387)
