@@ -228,24 +228,17 @@ class UploadableFileBehavior extends CActiveRecordBehavior{
         return Yii::getPathOfAlias($this->savePathAlias).DIRECTORY_SEPARATOR;
     }
 
-    public function beforeValidate($event)
+    public function attach($owner)
     {
-        // валидируем вручную, потому как изменить метод rules() у $owner мы не можем и правил всего два
-        if(in_array($this->getOwner()->getScenario(),$this->scenarios))
-        {
-            // альтерантива правилу array('document','file','types'=>'...','allowEmpty'=>true)
-            $fileValidator=new CFileValidator();
-            $fileValidator->attributes=array($this->attributeName);
-            $fileValidator->types=$this->fileTypes;
-            $fileValidator->allowEmpty=true;
-            $fileValidator->validate($this->getOwner(),array($this->attributeName));
+        parent::attach($owner);
 
-            // альтерантива правилу array('document','unsafe')
-            $unsafeValidator=new CUnsafeValidator();
-            $unsafeValidator->attributes=array($this->attributeName);
-            $unsafeValidator->validate($this->getOwner(),array($this->attributeName));
-        }
-        return true;
+        // добавляем валидатор файла, не забываем в параметрах валидатора указать значение safe как false
+        $fileValidator=CValidator::createValidator('file',$owner,$this->attributeName,array(
+            'types'=>$this->fileTypes,
+            'allowEmpty'=>true,
+            'safe'=>false,
+        ));
+        $owner->validatorList->add($fileValidator);
     }
 
     public function beforeSave($event)
