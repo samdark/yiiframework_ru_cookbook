@@ -322,9 +322,9 @@ class Item extends CActiveRecord{
 ситуацию, когда две разные модели могут иметь два файла с одним и тем-же файлом.
 
 ---
+  - `Автор`: [resurtm](http://resurtm.kz/)
+  - `Дополнения`: [mc-bear](http://yiiframework.ru/forum/memberlist.php?mode=viewprofile&u=58)
   - `Оригинальный рецепт`: [как загрузить файл используя модель](form.file.upload)
   - `Английский рецепт`: [how to upload a file using a model](http://www.yiiframework.com/wiki/2/)
   - [File upload and update / error actions](http://www.yiiframework.com/wiki/2/#c3137)
-  - `Автор`: [resurtm](http://resurtm.kz/)
-  - `Дополнения`: [mc-bear](http://yiiframework.ru/forum/memberlist.php?mode=viewprofile&u=58)
-  - `Обсуждение и комментарии`: [тема на форуме](http://yiiframework.ru/forum/)
+  - `Обсуждение и комментарии`: [тема на форуме](http://yiiframework.ru/forum/viewtopic.php?f=8&t=7387)
