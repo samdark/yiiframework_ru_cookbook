@@ -136,8 +136,7 @@ class Item extends CActiveRecord{
     {
         return array(
             array('title','required'),
-            array('document','file','types'=>'doc,docx,xls,xlsx,odt,pdf','allowEmpty'=>true),
-            array('document','unsafe'),
+            array('document','file','types'=>'doc,docx,xls,xlsx,odt,pdf','allowEmpty'=>true,'safe'=>false),
         );
     }
 
@@ -228,24 +227,20 @@ class UploadableFileBehavior extends CActiveRecordBehavior{
         return Yii::getPathOfAlias($this->savePathAlias).DIRECTORY_SEPARATOR;
     }
 
-    public function beforeValidate($event)
+    public function attach($owner)
     {
-        // валидируем вручную, потому как изменить метод rules() у $owner мы не можем и правил всего два
-        if(in_array($this->getOwner()->getScenario(),$this->scenarios))
-        {
-            // альтернатива правилу array('document','file','types'=>'...','allowEmpty'=>true)
-            $fileValidator=new CFileValidator();
-            $fileValidator->attributes=array($this->attributeName);
-            $fileValidator->types=$this->fileTypes;
-            $fileValidator->allowEmpty=true;
-            $fileValidator->validate($this->getOwner(),array($this->attributeName));
+        parent::attach($owner);
 
-            // альтернатива правилу array('document','unsafe')
-            $unsafeValidator=new CUnsafeValidator();
-            $unsafeValidator->attributes=array($this->attributeName);
-            $unsafeValidator->validate($this->getOwner(),array($this->attributeName));
+        if(in_array($owner->getScenario(),$this->scenarios))
+        {
+            // добавляем валидатор файла, не забываем в параметрах валидатора указать значение safe как false
+            $fileValidator=CValidator::createValidator('file',$owner,$this->attributeName,array(
+                'types'=>$this->fileTypes,
+                'allowEmpty'=>true,
+                'safe'=>false,
+            ));
+            $owner->validatorList->add($fileValidator);
         }
-        return true;
     }
 
     public function beforeSave($event)
@@ -328,6 +323,7 @@ class Item extends CActiveRecord{
 
 ---
   - `Автор`: [resurtm](http://resurtm.kz/)
+  - `Дополнения`: [mc-bear](http://yiiframework.ru/forum/memberlist.php?mode=viewprofile&u=58)
   - `Оригинальный рецепт`: [как загрузить файл используя модель](form.file.upload)
   - `Английский рецепт`: [how to upload a file using a model](http://www.yiiframework.com/wiki/2/)
   - [File upload and update / error actions](http://www.yiiframework.com/wiki/2/#c3137)
