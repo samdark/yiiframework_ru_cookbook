@@ -136,7 +136,8 @@ class Item extends CActiveRecord{
     {
         return array(
             array('title','required'),
-            array('document','file','types'=>'doc,docx,xls,xlsx,odt,pdf','allowEmpty'=>true,'safe'=>false),
+            array('document','file','types'=>'doc,docx,xls,xlsx,odt,pdf',
+                'allowEmpty'=>true,'safe'=>false),
         );
     }
 
@@ -149,7 +150,9 @@ class Item extends CActiveRecord{
                 $this->deleteDocument(); // старый документ удалим, потому что загружаем новый
 
                 $this->document=$document;
-                $this->document->saveAs(Yii::getPathOfAlias('webroot.media').DIRECTORY_SEPARATOR.$this->document);
+                $this->document->saveAs(
+                    Yii::getPathOfAlias('webroot.media').DIRECTORY_SEPARATOR.$this->document
+                );
             }
             return true;
         }
@@ -168,7 +171,8 @@ class Item extends CActiveRecord{
 
     public function deleteDocument()
     {
-        $documentPath=Yii::getPathOfAlias('webroot.media').DIRECTORY_SEPARATOR.$this->document;
+        $documentPath=Yii::getPathOfAlias('webroot.media').DIRECTORY_SEPARATOR.
+            $this->document;
         if(is_file($documentPath))
             unlink($documentPath);
     }
@@ -209,7 +213,8 @@ class UploadableFileBehavior extends CActiveRecordBehavior{
      */
     public $savePathAlias='webroot.media';
     /**
-     * @var array сценарии валидации к которым будут добавлены правила валидации загрузки файлов
+     * @var array сценарии валидации к которым будут добавлены правила валидации
+     * загрузки файлов
      */
     public $scenarios=array('insert','update');
     /**
@@ -218,8 +223,8 @@ class UploadableFileBehavior extends CActiveRecordBehavior{
     public $fileTypes='doc,docx,xls,xlsx,odt,pdf';
 
     /**
-     * Шорткат для Yii::getPathOfAlias($this->savePathAlias).DIRECTORY_SEPARATOR. Возвращает путь к директории,
-     * в которой будут сохраняться файлы.
+     * Шорткат для Yii::getPathOfAlias($this->savePathAlias).DIRECTORY_SEPARATOR.
+     * Возвращает путь к директории, в которой будут сохраняться файлы.
      * @return string путь к директории, в которой сохраняем файлы
      */
     public function getSavePath()
@@ -233,12 +238,18 @@ class UploadableFileBehavior extends CActiveRecordBehavior{
 
         if(in_array($owner->getScenario(),$this->scenarios))
         {
-            // добавляем валидатор файла, не забываем в параметрах валидатора указать значение safe как false
-            $fileValidator=CValidator::createValidator('file',$owner,$this->attributeName,array(
-                'types'=>$this->fileTypes,
-                'allowEmpty'=>true,
-                'safe'=>false,
-            ));
+            // добавляем валидатор файла, не забываем в параметрах валидатора указать
+            // значение safe как false
+            $fileValidator=CValidator::createValidator(
+                'file',
+                $owner,
+                $this->attributeName,
+                array(
+                    'types'=>$this->fileTypes,
+                    'allowEmpty'=>true,
+                    'safe'=>false,
+                )
+            );
             $owner->validatorList->add($fileValidator);
         }
     }
@@ -296,8 +307,9 @@ class Item extends CActiveRecord{
     {
         return array(
             array('title','required'),
-            // после генерации модели при помощи Gii нужно убрать валидацию у атрибута $document
-            // это будет мешать правильно работать валидации загружаемого файла и поведению UploadableFileBehavior
+            // после генерации модели при помощи Gii нужно убрать валидацию
+            // у атрибута $document — если этого не сделать, то оно будет
+            // препятствовать правильной работе валидации загружаемого файла
         );
     }
 
