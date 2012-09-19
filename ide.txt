@@ -107,6 +107,7 @@ PhpStorm
 
 ### Полезные ссылки
   - [Портативная Web IDE](http://rmcreative.ru/blog/post/portativnaja-web-ide).
+  - [Yii, автокомплит для Yii::app](http://rmcreative.ru/blog/post/yii--avtokomplit-dlja-yiiapp).
 
 ---
  - `Использованы материалы` [NetBeans IDE and Yii projects](http://www.yiiframework.com/doc/cookbook/83/).
