@@ -23,6 +23,7 @@ class MyModel extends CActiveRecord
 
 Полезные ссылки
 ---------------
+
 - [Adding Foreign Keys Manually](http://danaluther.blogspot.com/2010/06/adding-foreign-keys-manually.html)
 
 ---
