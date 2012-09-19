@@ -12,7 +12,7 @@
 
 ~~~
 [php]
-<?if(extension_loaded('gd') && Yii::app()->user->isGuest):?>
+<?if(CCaptcha::checkRequirements() && Yii::app()->user->isGuest):?>
     <?=CHtml::activeLabelEx($model, 'verifyCode')?>
     <?$this->widget('CCaptcha')?>
     <?=CHtml::activeTextField($model, 'verifyCode')?>
@@ -36,7 +36,7 @@ class Comment extends CActiveRecord {
                 'verifyCode',
                 'captcha',
                 // авторизованным пользователям код можно не вводить
-                'allowEmpty'=>!Yii::app()->user->isGuest || !extension_loaded('gd')
+                'allowEmpty'=>!Yii::app()->user->isGuest || !CCaptcha::checkRequirements(),
             ),
         );
     }
