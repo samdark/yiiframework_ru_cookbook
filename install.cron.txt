@@ -55,12 +55,12 @@ class TestCommand extends CConsoleCommand {
 }
 ~~~
 
-Копируем `protected/yiic.php` в `protected/cron.php` и указываем путь к отдельному файлу
-конфигурации. Выглядеть `cron.php` будет примерно так:
+Создаем файл `protected/cron.php` и указываем в нем пути к файлу `yiic.php` из директории фреймворка и 
+к отдельному файлу конфигурации. Выглядеть `cron.php` будет примерно так:
 
 ~~~
 [php]
-$yiic=dirname(__FILE__).'/../framework/yii.php';
+$yiic=dirname(__FILE__).'/../framework/yiic.php';
 $config=dirname(__FILE__).'/config/cron.php';
 
 require_once($yiic);
