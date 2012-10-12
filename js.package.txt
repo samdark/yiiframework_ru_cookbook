@@ -1,0 +1,75 @@
+Создание пакетов JS и CSS
+==========
+
+В Yii есть возможность создания своих пакетов, содержащих JS и CSS файлы. При описании пакета можно указать зависимости от других пакетов.
+
+Есть замечательный инструмент для рисования графиков на JS — [highcharts](http://www.highcharts.com/ "highcharts"), но он использует фреймворк jQuery и сам jQuery не подключает.
+
+Рассмотрим пример использования пакета.
+
+Создаём пакет, где указываем JS и CSS файлы из highcharts и прописываем зависимость от пакета с jQuery. В Yii jQuery является встроенным пакетом.
+
+
+Список всех встроенных пакетов можно найти в файле `framework/web/js/packages.php`
+
+Настройка компонента в `protected/main.php`:
+
+~~~
+[php]
+'clientScript'=>array(
+    'packages' => array(
+       // Уникальное имя пакета
+       'highcharts' => array(
+            // Где искать подключаемые файлы JS и CSS
+            'baseUrl' => '/js/highcharts/',
+            // Если включен дебаг-режим, то подключает /js/highcharts/highcharts.src.js
+            // Иначе /js/highcharts/highcharts.js
+            'js'=>array(YII_DEBUG ? 'highcharts.src.js' : 'highcharts.js'),
+            // Подключает файл /js/highcharts/highcharts.css
+            'css' => array('highcharts.css'),
+            // Зависимость от другого пакета
+            'depends'=>array('jquery'),
+        ),
+    )
+)
+~~~
+
+
+
+Использование
+-------------
+
+
+Теперь вместо многострочного кода:
+~~~
+[php]
+Yii::app()->clientScript
+  ->registerPackage('jquery')
+  ->registerScriptFile('/js/highcharts/highcharts.js')
+  ->registerCssFile('/js/highcharts/highcharts.css');
+
+~~~
+
+пишем лаконично:
+~~~
+[php]
+Yii::app()->clientScript
+->registerPackage('highcharts');
+~~~
+
+Yii загрузит jQuery только один раз, даже если какой-то другой модуль, виджет или ваш код уже подключил jQuery.
+
+
+~~~
+[php]
+Yii::app()->clientScript
+->registerPackage('jquery');
+
+…
+
+Yii::app()->clientScript
+->registerPackage('highcharts');
+~~~
+
+---
+  - `Автор`: Загиров Рустам, Stamm ([zagirov.name](http://zagirov.name/))
