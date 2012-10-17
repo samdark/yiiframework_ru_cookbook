@@ -12,7 +12,7 @@ AJAX в Yii
 class AjaxController extends CController {
 	// actionIndex вызывается всегда, когда action не указан явно.
 	function actionIndex(){
-		$input = $_POST['input'];
+		$input = Yii::app()->getPost('input');
 		// для примера будем приводить строку к верхнему регистру
 		$output = mb_strtoupper($input, 'utf-8');
 
