@@ -36,6 +36,7 @@
 * JavaScript
     - [AJAX в Yii](js.ajax)
     - [Индикаторы AJAX-загрузки](js.ajax.load.indicators)
+    - [Создание пакетов JS и CSS](js.package)
 
 * Особенности фреймворка
     - [События](core.events)
