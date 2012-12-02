@@ -87,8 +87,9 @@ class UserCommand extends CConsoleCommand{
 	const RATING_USERS_PER_ITERATION=5000;
 
 	/**
-	 * Экшн для пересчёта среднего рейтинга пользователей. Результаты формируются для 26 групп пользователей,
-	 * каждая группа соответствует пользователям, имена которых начинаются на одну латинскую букву.
+	 * Экшн для пересчёта среднего рейтинга пользователей. Результаты формируются
+	 * для 26 групп пользователей, каждая группа соответствует пользователям, имена
+	 * которых начинаются на одну латинскую букву.
 	 */
 	public function actionRating(){
 		Yii::import('application.models.User',true);
@@ -111,7 +112,8 @@ class UserCommand extends CConsoleCommand{
 					'params'=>array(':username'=>$letter.'%'),
 				),
 			));
-			$iterator=new CDataProviderIterator($dataProvider,self::RATING_USERS_PER_ITERATION);
+			$iterator=new CDataProviderIterator($dataProvider,
+			    self::RATING_USERS_PER_ITERATION);
 
 			// обходим данные для каждой буквы
 			$result=0;
@@ -119,9 +121,9 @@ class UserCommand extends CConsoleCommand{
 				$result+=$user->rating/($iterator->totalItemCount)*100000;
 			$results[$letter]=$result/100000;
 
-			// умножение на 100000 каждого значения, а потом деление на 100000 общего результата
-			// сделано для того, чтобы погрешность, вносимая особенностями хранения вещественных
-			// чисел в современных ПК была минимальна
+			// умножение на 100000 каждого значения, а потом деление на 100000 общего
+			// результата сделано для того, чтобы погрешность, вносимая особенностями
+			// хранения вещественных чисел в современных ПК была минимальна
 
 			echo "Letter '{$letter}' is done!\n";
 		}
@@ -151,4 +153,4 @@ class UserCommand extends CConsoleCommand{
 
 ---
   - `Автор`: [resurtm](http://resurtm.kz/)
-  - `Обсуждение и комментарии`: [тема на форуме](http://yiiframework.ru/forum/)
+  - `Обсуждение и комментарии`: [тема на форуме](http://yiiframework.ru/forum/viewtopic.php?f=8&t=9854&p=57285)
