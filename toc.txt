@@ -20,6 +20,7 @@
     - [DAO и модели](model.dao)
     - [Использование Active Record с несколькими БД](model.multiple.databases)
     - [Связь не по первичному ключу в MyISAM](model.myisam.nonpk.relation)
+    - [Итератор для провайдеров данных](model.data.provider.iterator)
 
 * Формы
     - [Краткий справочник по валидации](form.validation.reference)
