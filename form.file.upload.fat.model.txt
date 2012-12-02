@@ -226,7 +226,9 @@ class UploadableFileBehavior extends CActiveRecordBehavior{
         }
     }
 
-    protected function beforeSave($event){
+    // имейте ввиду, что методы-обработчики событий в поведениях должны иметь
+    // public-доступ начиная с 1.1.13RC
+    public function beforeSave($event){
         if(in_array($this->owner->scenario,$this->scenarios) &&
             ($file=CUploadedFile::getInstance($this->owner,$this->attributeName))){
             $this->deleteFile(); // старый файл удалим, потому что загружаем новый
@@ -237,7 +239,9 @@ class UploadableFileBehavior extends CActiveRecordBehavior{
         return true;
     }
 
-    protected function beforeDelete($event){
+    // имейте ввиду, что методы-обработчики событий в поведениях должны иметь
+    // public-доступ начиная с 1.1.13RC
+    public function beforeDelete($event){
         $this->deleteFile(); // удалили модель? удаляем и файл, связанный с ней
     }
 
