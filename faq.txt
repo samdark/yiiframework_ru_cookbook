@@ -38,7 +38,9 @@
 
 ### 2. Есть ли полная диаграмма классов фреймвока?
 
-Да, есть: [http://yiiframework.ru/files/diagram.png](http://yiiframework.ru/files/diagram.png).
+Лучший способ получить актуальную диаграмму — использовать PhpStorm.
+
+Готовое изображение можно найти по следующему адресу: [http://yiiframework.ru/files/diagram.png](http://yiiframework.ru/files/diagram.png).
 Может не соответствовать последней версии Yii (актуальна на 3.12.2012).
 
 ### 3. А есть ли смысл держать ещё одну копию документации?
