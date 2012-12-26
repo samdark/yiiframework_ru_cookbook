@@ -7,6 +7,7 @@ AJAX в Yii
 ----------
 
 Создадим новый контроллер AjaxController. Запустить его можно будет как `http://localhost/ajax/`.
+
 ~~~
 [php]
 class AjaxController extends CController {

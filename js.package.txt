@@ -12,7 +12,7 @@
 
 Список всех встроенных пакетов можно найти в файле `framework/web/js/packages.php`
 
-Настройка компонента в `protected/main.php`:
+Настройка компонента в `protected/config/main.php`:
 
 ~~~
 [php]
