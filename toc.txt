@@ -31,6 +31,8 @@
     - [Как загрузить файл используя модель (вариант с толстой моделью)](form.file.upload.fat.model)
     - [Добавляем CAPTCHA к форме](form.captcha)
     - [Как подключить FCKeditor](form.fckeditor)
+    - [Вывод CStarRating в GridView](form.cstarrating.in.gridview)
+    - [Расширяем CFormatter](form.extend.cformatter)
 
 * Контроль доступа
     - [RBAC и описание ролей в файле](access.rbac.file)
