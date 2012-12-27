@@ -1,14 +1,21 @@
 Вывод CStarRating в GridView
 =========================
 
-В качестве вступления: На сайте есть система комментариев с рейтингом (выставление оценок при помощи виджета [CStarRating]).
-Необходимо в [CGridView] отображать выставленный с каждым комментарием рейтинг "звёздочками".
+В качестве вступления: На сайте есть система комментариев с рейтингом (выставление
+оценок при помощи виджета `[CStarRating]`). Необходимо в `[CGridView]` отображать
+выставленный с каждым комментарием рейтинг "звёздочками".
 
-Для этого нам потребуется в представлении, например, admin.php в значение ключа 'value' написать:
+Для этого нам потребуется в представлении, например, `admin.php` в значение
+ключа `value` написать:
 
 ~~~
 [php]
-$this->grid->controller->widget("CStarRating", array("name" => $data->id, "id" => $data->id, "value" => $data->rating, "readOnly" => true,),true)
+$this->grid->controller->widget("CStarRating", array(
+	"name" => $data->id,
+	"id" => $data->id,
+	"value" => $data->rating,
+	"readOnly" => true,
+), true);
 ~~~
 
 Полный вид получится примерно следующим:
@@ -18,7 +25,12 @@ $this->grid->controller->widget("CStarRating", array("name" => $data->id, "id" =
 array(
 	'name' => 'rating',
 	'type' => 'raw',
-	'value'=>'$this->grid->controller->widget("CStarRating", array("name" => $data->id, "id" => $data->id, "value" => $data->rating, "readOnly" => true,),true)',
+	'value'=>'$this->grid->controller->widget("CStarRating", array(
+		"name" => $data->id,
+		"id" => $data->id,
+		"value" => $data->rating,
+		"readOnly" => true,
+	), true)',
 	'headerHtmlOptions' => array('style' => 'width:85px;'),
 	'htmlOptions' => array('class' => 'rating-block'),
 	'filter' => false,
@@ -26,13 +38,14 @@ array(
 ),
 ~~~
 
-Ну и чтобы после поиска/сортировки/фильтрации не отваливался вид ( вместо звёзд отображается набор радиобатонов)
-необходимо добавить следующий код:
+Ну и чтобы после поиска, сортировки или фильтрации не отваливался вид (вместо
+звёзд в этом случае отображается набор радиобатонов) необходимо добавить
+следующий код:
 
 ~~~
 [php]
 'afterAjaxUpdate'=>"function() {
-    jQuery('.rating-block input').rating({'readOnly':true});
+	jQuery('.rating-block input').rating({'readOnly':true});
 }",
 ~~~
 
@@ -54,7 +67,12 @@ $this->widget('bootstrap.widgets.TbGridView', array(
 		array(
 			'name' => 'rating',
 			'type' => 'raw',
-			'value'=>'$this->grid->controller->widget("CStarRating", array("name" => $data->id, "id" => $data->id, "value" => $data->rating, "readOnly" => true,),true)',
+			'value'=>'$this->grid->controller->widget("CStarRating", array(
+				"name" => $data->id,
+				"id" => $data->id,
+				"value" => $data->rating,
+				"readOnly" => true,
+			), true)',
 			'headerHtmlOptions' => array('style' => 'width:85px;'),
 			'htmlOptions' => array('class' => 'rating-block'),
 			'filter' => false,
@@ -66,6 +84,7 @@ $this->widget('bootstrap.widgets.TbGridView', array(
 
 Стоит изучить
 -------------
+
  - [CStarRating](http://www.yiiframework.com/doc/api/CStarRating).
  - [CGridView](http://www.yiiframework.com/doc/api/CGridView).
 

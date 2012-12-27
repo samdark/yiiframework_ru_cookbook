@@ -1,19 +1,25 @@
 Расширяем CFormatter
 =========================
 
-Задача:
-Расширить [CFormatter], таким образом: при выводе длинных предложений наш фильтр резал текст и на выходе отдавал 5 первых слов с добавлением троеточия
+Задача
+------
 
-Вступление:
-В том же GridView или DetailView мы частенько задаём тип поля, например: 'type' => 'raw', 'type' => 'text' и т.д.
+Расширить [CFormatter], таким образом: при выводе длинных предложений
+наш фильтр резал текст и на выходе отдавал 5 первых слов с добавлением троеточия.
+
+Вступление
+----------
+
+В том же GridView или DetailView мы частенько задаём тип поля, например:
+`'type' => 'raw', 'type' => 'text'` и т.д.
 
 Для GridView это может выглядеть так:
 
 ~~~
 [php]
 array(
-    'name' => 'text',
-    'type' => 'raw',
+	'name' => 'text',
+	'type' => 'raw',
 ),
 ~~~
 
@@ -22,66 +28,71 @@ array(
 ~~~
 [php]
 array(
-    'label' => 'Email',
-    'value' => ' email@email.com',
-    'type' => 'email',
-    'template' => "<tr class=\"{class}\"><th>{label}</th><td>{value}</td></tr>\n"
+	'label' => 'Email',
+	'value' => ' email@email.com',
+	'type' => 'email',
+	'template' => "<tr class=\"{class}\"><th>{label}</th><td>{value}</td></tr>\n"
 ),
 ~~~
 
-Но, в основном, используется типы такие, как: 'raw', 'email', 'image' да 'url'.
+Но, в основном, используется типы такие, как: `raw`, `email`, `image` да `url`.
 
-Решение:
-В папке protected/components создадим новый файл CCFormatter.php с содержимым:
+Решение
+-------
+
+В папке `protected/components` создадим новый файл `CCFormatter.php` с содержимым:
 
 ~~~
 [php]
 <?php
 class CCFormatter extends CFormatter {
-    public $numOfWords = 5;
+	public $numOfWords = 5;
 
-    public function formatTtext($value) {
-        $value = CHtml::encode($value);
+	public function formatTtext($value) {
+		$value = CHtml::encode($value);
 
-        $lenBefore = strlen($value);
+		$lenBefore = strlen($value);
 
-        if($this->numOfWords){
-            if(preg_match("/\s*(\S+\s*){0,$this->numOfWords}/", $value, $match)){
-                $value = trim($match[0]);
-            }
-            if(strlen($value) != $lenBefore){
-                $value .= ' ...';
-            }
-        }
+		if($this->numOfWords){
+			if(preg_match("/\s*(\S+\s*){0,$this->numOfWords}/", $value, $match)){
+				$value = trim($match[0]);
+			}
+			if(strlen($value) != $lenBefore){
+				$value .= ' ...';
+			}
+		}
 
-        return $value;
-    }
+		return $value;
+	}
 }
 ~~~
 
-В файл config/main.php секцию 'components' добавим три строчки:
+В файл `config/main.php` секцию `components` добавим три строчки:
 
 ~~~
 [php]
 'format' => array(
-    'class' => 'application.components.CCFormatter'
+	'class' => 'application.components.CCFormatter'
 ),
 ~~~
 
-После всех этих несложных манипуляций проверим работоспособность в CDetailView:
+После всех этих несложных манипуляций проверим работоспособность в `CDetailView`:
 
 ~~~
 [php]
 array(
-    'label' => 'Текст',
-    'value' => 'Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" для текстов на латинице с начала XVI века.',
-    'type' => 'ttext',
-    'template' => "<tr class=\"{class}\"><th>{label}</th><td>{value}</td></tr>\n"
+	'label' => 'Текст',
+	'value' => 'Lorem Ipsum - это текст-"рыба", часто используемый в печати и
+				вэб-дизайне. Lorem Ipsum является стандартной "рыбой" для
+				текстов на латинице 	с начала XVI века.',
+	'type' => 'ttext',
+	'template' => "<tr class=\"{class}\"><th>{label}</th><td>{value}</td></tr>\n"
 ),
 ~~~
 
 Стоит изучить
 -------------
+
  - [CFormatter](http://www.yiiframework.com/doc/api/CFormatter).
  - [CDetailView](http://www.yiiframework.com/doc/api/CDetailView).
  - [CGridView](http://www.yiiframework.com/doc/api/CGridView).
