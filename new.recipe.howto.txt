@@ -58,7 +58,7 @@ git config --global user.email "your_email@youremail.com"
 - Жмём кнопочку «Fork».
 - Идём в свой репозиторий `https://github.com/your-nickname/yiiframework_ru_cookbook`.
 - Копируем адрес своего репозитория. Например, `git@github.com:your-nickname/yiiframework_ru_cookbook.git`.
-- Забираем проект себе, добавляем `upstream`, сслающийся на оргинальный репозиторий. Открываем консоль:
+- Забираем проект себе, добавляем `upstream`, ссылающийся на оргинальный репозиторий. Открываем консоль:
 
 ~~~
 git clone git@github.com:your-nickname/yiiframework_ru_cookbook.git
@@ -92,7 +92,7 @@ git push -u origin my-cool-changes
 - Выбираем нашу ветку используя селектор «branch:».
 - Жмём кнопку «Pull Request», вводим описание и отсылаем реквест.
 
-Чере какое-то время я получаю уведомление о новых изменениях, делаю
+Через какое-то время я получаю уведомление о новых изменениях, делаю
 необходимые замечания. Чтобы их исправить делаются правки тех же файлов в той
 же ветки и повторяется
 
