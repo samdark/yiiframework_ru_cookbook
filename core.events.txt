@@ -204,7 +204,7 @@ Yii::app()->onEndRequest = function($event){
 ~~~
 [php]
 class MyEventHandler {
-	function handleMissingTranslation($event){
+	public static function handleMissingTranslation($event){
 		// обрабатываем отсутствие перевода
 	}
 }
