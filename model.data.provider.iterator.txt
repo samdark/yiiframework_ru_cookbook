@@ -152,5 +152,5 @@ class UserCommand extends CConsoleCommand{
   [mutex](http://www.yiiframework.com/extension/mutex).
 
 ---
-  - `Автор`: [resurtm](http://resurtm.kz/)
+  - `Автор`: [resurtm](http://resurtm.com/)
   - `Обсуждение и комментарии`: [тема на форуме](http://yiiframework.ru/forum/viewtopic.php?f=8&t=9854&p=57285)
