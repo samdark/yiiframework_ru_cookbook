@@ -33,6 +33,7 @@
     - [Как подключить FCKeditor](form.fckeditor)
     - [Вывод CStarRating в GridView](form.cstarrating.in.gridview)
     - [Расширяем CFormatter](form.extend.cformatter)
+    - [Использование виджета CMaskedTextField](form.cmaskedtextfield)
 
 * Контроль доступа
     - [RBAC и описание ролей в файле](access.rbac.file)
