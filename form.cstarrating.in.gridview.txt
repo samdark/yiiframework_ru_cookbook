@@ -1,5 +1,5 @@
 Вывод CStarRating в GridView
-=========================
+============================
 
 В качестве вступления: На сайте есть система комментариев с рейтингом (выставление
 оценок при помощи виджета [CStarRating]). Необходимо в [CGridView] отображать
@@ -52,7 +52,7 @@ array(
 В итоге должно получится как-то так:
 ~~~
 [php]
-$this->widget('bootstrap.widgets.TbGridView', array(
+$this->widget('zii.widgets.CGridView', array(
 	'id'=>'users-comments-grid',
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,

@@ -64,7 +64,7 @@ xdebug.remote_port = 9000
 
 Отладку можно начать нажав `Ctrl-F5`.
 
-Для использования своих точек останова идём в `Tools → Options → PHP → вкладка General` и
+Для использования своих точек останова идём в `Tools → Options → PHP → вкладка Debugging` и
 снимаем галочку с `Stop at First Line`.
 
 ### Полезные ссылки
