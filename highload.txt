@@ -30,7 +30,7 @@
 -------------
   - [Настройка для работы на сервере](install.production).
   - [Улучшение производительности](/doc/guide/topics.performance).
-  - [Блог «Высокая производительность» на Хабре](http://habrahabr.ru/blogs/hi/).
+  - [Блог «Высокая производительность» на Хабре](http://habrahabr.ru/hub/hi/).
 
 ---
   - `Автор`: Александр Макаров, Sam Dark ([rmcreative.ru](http://rmcreative.ru/))
