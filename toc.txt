@@ -13,6 +13,7 @@
     - [Использование приложения Yii в сторонних скриптах](install.integration)
     - [HTTPS и Yii](install.https)
     - [Yii и Denwer](install.denwer)
+    - [Cookie на поддоменах](install.cookie.subdomains)
 
 * Модели
     - [Обновление определённого поля модели](model.update.specified.field)
