@@ -1,13 +1,13 @@
 Cookie на поддоменах
 =========================
 
-Если сайт имеет поддомены, то целесообразно хранить авторизацию пользователя как на основном домене, так и на поддоменах.
+Если сайт использует поддомены, то целесообразно авторизовать пользователя одновременно как на основном домене, так и на поддоменах.
 
-Пример: основной домен сайта http://domain_site.ru. У него есть поддомены http://msk.domain_site.ru, http://spb.domain_site.ru.
+Пример: основной домен сайта http://example.com. У него есть поддомены http://msk.example.com, http://spb.example.com.
 
-Пользователь авторизировался на http://domain_site.ru, но на http://msk.domain_site.ru он уже будет "гостем", а не "авторизированным пользователем".
+Пользователь авторизировался на http://example.com, но на http://msk.example.com он уже будет "гостем", а не "авторизированным пользователем".
 
-Чтобы избежать такого досадного недоразумения необходимо добавить в конфигурационный файл (например: protected\config\main.php), в секцию 'components', следующий код:
+Чтобы избежать такого досадного недоразумения необходимо добавить в конфигурационный файл (например: `protected\config\main.php`), в секцию `components`, следующий код:
 
 ~~~
 [php]
@@ -20,9 +20,9 @@ Cookie на поддоменах
 
 ~~~
 [php]
-'user'=>array(
+'user' => array(
     // enable cookie-based authentication
-    'allowAutoLogin'=>true,
+    'allowAutoLogin' => true,
     'identityCookie' => array('domain' => '.domain_site.ru'),
 ),
 ~~~
@@ -33,15 +33,15 @@ Cookie на поддоменах
 [php]
 ...
 // application components
-'components'=>array(
+'components' => array(
     ...
     'session' => array(
         'cookieParams' => array('domain' => '.domain_site.ru'),
     ),
     ...
-    'user'=>array(
+    'user' => array(
         // enable cookie-based authentication
-        'allowAutoLogin'=>true,
+        'allowAutoLogin' => true,
         'identityCookie' => array('domain' => '.domain_site.ru'),
     ),
     ...
@@ -49,22 +49,22 @@ Cookie на поддоменах
 ...
 ~~~
 
-`После внесённых изменений необходимо очистить cookie в браузере и очистить кэш сайта`.
+> Note|Примечание: После внесённых изменений необходимо очистить cookie в браузере и очистить кэш сайта.
 
-Обычно, кэш самого скрипта хранится в protected/runtime/cache.
+Обычно, кэш самого скрипта хранится в `protected/runtime/cache`.
 
 Однако, можно задать свою папку для хранения кэша. Для этого необходимо после строки:
 
 ~~~
 [php]
-'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
+'basePath' => dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 ~~~
 
 Добавить код:
 
 ~~~
 [php]
-'runtimePath' => Yii::getPathOfAlias('system') . '/../my_cache_folder/',
+'runtimePath' => Yii::getPathOfAlias('system').'/../my_cache_folder/',
 ~~~
 
 После изменений кэш будет храниться от "корня" сайта (где находится index.php) в папке "my_cache_folder".
