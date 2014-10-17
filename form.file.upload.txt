@@ -14,7 +14,7 @@ class Item extends CActiveRecord {
     public function rules(){
         return array(
             //устанавливаем правила для файла, позволяющие загружать
-			// только картинки!
+            // только картинки!
             array('image', 'file', 'types'=>'jpg, gif, png'),
         );
     }
@@ -33,7 +33,7 @@ class ItemController extends CController {
             $model->image=CUploadedFile::getInstance($model,'image');
             if($model->save()){
                 $path=Yii::getPathOfAlias('webroot').'/upload/'.$model->image->getName();
-                $model->image->saveAs($path));
+                $model->image->saveAs($path);
                 // перенаправляем на страницу, где выводим сообщение об
 				// успешной загрузке
             }
