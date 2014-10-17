@@ -13,7 +13,7 @@ class Item extends CActiveRecord {
 
     public function rules(){
         return array(
-		    //устанавливаем правила для файла, позволяющие загружать
+            //устанавливаем правила для файла, позволяющие загружать
 			// только картинки!
             array('image', 'file', 'types'=>'jpg, gif, png'),
         );
@@ -32,7 +32,8 @@ class ItemController extends CController {
             $model->attributes=$_POST['Item'];
             $model->image=CUploadedFile::getInstance($model,'image');
             if($model->save()){
-                $model->image->saveAs('path/to/localFile');
+                $path=Yii::getPathOfAlias('webroot').'/upload/'.$model->image->getName();
+                $model->image->saveAs($path));
                 // перенаправляем на страницу, где выводим сообщение об
 				// успешной загрузке
             }
@@ -72,10 +73,10 @@ if($model->save()){
 >~~~
 [php]
 public function rules(){
-	return array(
-	    // Максимальный и минимальный размер указываем в байтах.
-		array('image', 'file', 'types'=>'jpg, gif, png', 'maxSize' => 1048576),
-	);
+    return array(
+        // Максимальный и минимальный размер указываем в байтах.
+        array('image', 'file', 'types'=>'jpg, gif, png', 'maxSize' => 1048576),
+    );
 }
 ~~~
 
