@@ -138,6 +138,7 @@ echo CHtml::image($url);
 - [extendedclientscript](http://www.yiiframework.com/extension/extendedclientscript/) — собирает CSS и JavaScript в один файл, сжимает их при помощи [JSMin](http://www.crockford.com/javascript/jsmin.html) и [CSSTidy](http://csstidy.sourceforge.net/).
 - [cclientscriptminify](http://www.yiiframework.com/extension/cclientscriptminify/) — то же при помощи [minify](http://code.google.com/p/minify/).
 - [haml-and-sass](http://www.yiiframework.com/extension/haml-and-sass/) — конвертирует [Sass](http://sass-lang.com/) в CSS при публикации. Также позволяет использовать [Haml](http://haml-lang.com/).
+- [IMTYiiAssetic](https://github.com/IgorTimoshenko/IMTYiiAssetic) — интегрирует [Assetic](https://github.com/kriswallsmith/assetic) в Yii.
 
 ---
   - `Автор`: Александр Макаров, Sam Dark ([rmcreative.ru](http://rmcreative.ru/))
