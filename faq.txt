@@ -6,6 +6,7 @@
 Где можно пообщаться вживую?
 ----------------------------
 
+- [Gitter чат](https://gitter.im/yiisoft/yii2/rus)
 - yii@conference.jabber.ru — русскоязычная Jabber-конференция.
 - [IRC #yii на Freenode](irc://irc.freenode.net/yii) — официальный англоязычный IRC-канал.
 
