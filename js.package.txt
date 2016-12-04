@@ -14,8 +14,7 @@
 
 Настройка компонента в `protected/config/main.php`:
 
-~~~
-[php]
+```php
 'clientScript'=>array(
     'packages' => array(
        // Уникальное имя пакета
@@ -32,7 +31,7 @@
         ),
     )
 )
-~~~
+```
 
 
 
@@ -41,27 +40,24 @@
 
 
 Теперь вместо многострочного кода:
-~~~
-[php]
+```php
 Yii::app()->clientScript
   ->registerPackage('jquery')
   ->registerScriptFile('/js/highcharts/highcharts.js')
   ->registerCssFile('/js/highcharts/highcharts.css');
 
-~~~
+```
 
 пишем лаконично:
-~~~
-[php]
+```php
 Yii::app()->clientScript
 ->registerPackage('highcharts');
-~~~
+```
 
 Yii загрузит jQuery только один раз, даже если какой-то другой модуль, виджет или ваш код уже подключил jQuery.
 
 
-~~~
-[php]
+```php
 Yii::app()->clientScript
 ->registerPackage('jquery');
 
@@ -69,7 +65,7 @@ Yii::app()->clientScript
 
 Yii::app()->clientScript
 ->registerPackage('highcharts');
-~~~
+```
 
 ---
   - `Автор`: Загиров Рустам, Stamm ([zagirov.name](http://zagirov.name/))

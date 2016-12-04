@@ -5,8 +5,7 @@
 Yii отлично определяет нужные поля для связей типа `HAS_MANY`. Если же используется
 MyISAM, в котором поддержки внешних ключей нет, или view, необходимо задать их в коде:
 
-~~~
-[php]
+```php
 class MyModel extends CActiveRecord
 {
     public function getTableSchema()
@@ -19,7 +18,7 @@ class MyModel extends CActiveRecord
         return $table;
     }
 }
-~~~
+```
 
 Полезные ссылки
 ---------------

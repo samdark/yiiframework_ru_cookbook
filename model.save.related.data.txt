@@ -4,8 +4,7 @@
 Довольно часто требуется сохранить связанные данные для текущей модели. К примеру,
 при сохранении модели команды сохранить её членов:
 
-~~~
-[php]
+```php
 // создаём команду
 $team = new Team();
 $team->name = 'yiiframework.ru documentation team';
@@ -24,12 +23,11 @@ $team->members[] = $member2;
 
 // сохраняем
 $team->save();
-~~~
+```
 
 Чтобы код выше работал, определим метод `afterSave` модели `Team`:
 
-~~~
-[php]
+```php
 class Team extends CActiveRecord{
     // …
     // выполняется сразу после сохранения Team
@@ -44,7 +42,7 @@ class Team extends CActiveRecord{
     }
     // …
 }
-~~~
+```
 
 ---
   - `Автор`: Александр Макаров, Sam Dark ([rmcreative.ru](http://rmcreative.ru/))

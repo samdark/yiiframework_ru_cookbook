@@ -4,8 +4,7 @@
 Валидаторы, наследуемые от [CValidator], содержат свойство `message`. Вы можете
 установить его для изменения сообщения определённого правила:
 
-~~~
-[php]
+```php
 class Post extends CActiveRecord
 {
     public function rules()
@@ -17,7 +16,7 @@ class Post extends CActiveRecord
         );
     }
 }
-~~~
+```
 
 `{attribute}` заменяется именем поля в [CRequiredValidator] при возникновении в данном поле ошибки.
 

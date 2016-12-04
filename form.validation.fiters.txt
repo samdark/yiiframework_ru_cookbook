@@ -10,8 +10,7 @@
 различных правил и стандартов. В примере ниже использован немного изменённый код
 [http://programmerz.ru/post/php_translit.html](http://programmerz.ru/post/php_translit.html):
 
-~~~
-[php]
+```php
 class TranslitFilter {
     public function translitUrl($str){
         $tr = array(
@@ -39,18 +38,17 @@ class TranslitFilter {
         return $str;
     }
 }
-~~~
+```
 
 Сохраняем его под этим же именем в директории, доступной для импорта. Далее в методе
 `rules` модели прописываем следующее:
 
-~~~
-[php]
+```php
 return array(
     // …
     array('alias', 'filter', 'filter'=>array("TranslitFilter", "translitUrl")),
 )
-~~~
+```
 
 > Info|Информация: в `filter` указывается функция обратного вызова в виде
   array("Класс", "метод"). При использовании метода того же контроллера
@@ -61,8 +59,7 @@ return array(
 Таким же образом можно использовать любой метод любого существующего компонента.
 Например, вот так можно выполнить фильтрацию текста от XSS-атак:
 
-~~~
-[php]
+```php
 public function rules() {
     return array(
         array('text','required'),
@@ -71,7 +68,7 @@ public function rules() {
         array('time','default','value'=>time()),
     );
 }
-~~~
+```
 
 ---
   - `Автор оригинала`: [Dreammaker](http://yiiframework.ru/forum/memberlist.php?mode=viewprofile&u=557)

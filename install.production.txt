@@ -7,11 +7,10 @@
 обработку исключений и ошибок в Yii, если это вам не нужно.
 
 `index.php`:
-~~~
-[php]
+```php
 // отключаем отладку
 define('YII_DEBUG', false);
-~~~
+```
 
 Сессия в БД
 -----------
@@ -19,29 +18,27 @@ Yii не создаёт индекс для таблицы сессии.
 Сделаем это: CREATE INDEX yiisession_expire_idx ON "yiisession" (expire);
 
 После однократного запуска сессии запретим проверку на существование таблицы:
-~~~
-[php]
+```php
 'session' => array(
     'class' => 'CDbHttpSession',
     'connectionID' => 'db',
     'autoCreateSessionTable' => false, //!!!
 ),
-~~~
+```
 
 Сессия в кэше
 -------------
 Намного быстрее всех остальных способов хранения сессий. Рекомендуется использовать,
 если не критична потеря данных сессии.
 
-~~~
-[php]
+```php
 'session' => array(
     'class' => 'CCacheHttpSession',
 ),
 'cache'=>array(
     'class'=>'system.caching.CApcCache',
 ),
-~~~
+```
 
 Стоит изучить
 -------------

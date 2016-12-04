@@ -11,8 +11,7 @@
 
 Создадим две БД: `db1` и `db2` и пропишем их в конфигурации Yii:
 
-~~~
-[php]
+```php
 'components'=>array(
     //…
     'db'=>array(
@@ -32,12 +31,11 @@
     ),
     //…
 ),
-~~~
+```
 
 В `db1` создадим таблицу `post`:
 
-~~~
-[sql]
+```sql
 /* Post table */
 DROP TABLE IF EXISTS `post`;
 CREATE TABLE IF NOT EXISTS `post` (
@@ -46,12 +44,11 @@ CREATE TABLE IF NOT EXISTS `post` (
   `text` TEXT NOT NULL,
   PRIMARY KEY  (`id`)
 );
-~~~
+```
 
 В `db2` — таблицу `comment`:
 
-~~~
-[sql]
+```sql
 /* Comment table */
 DROP TABLE IF EXISTS `comment`;
 CREATE TABLE IF NOT EXISTS `comment` (
@@ -60,15 +57,14 @@ CREATE TABLE IF NOT EXISTS `comment` (
   `postId` INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY  (`id`)
 );
-~~~
+```
 
 Так как `Post` использует БД по умолчанию, никаких отличий от стандартной модели
 не будет.
 
 Займёмся моделью `Comment`. Переопределим соединение и имя таблицы:
 
-~~~
-[php]
+```php
 class Comment extends CActiveRecord {
     //…
 
@@ -84,13 +80,12 @@ class Comment extends CActiveRecord {
 
     //…
 }
-~~~
+```
 
 Пробуем:
-~~~
-[php]
+```php
 Post::model()->with('comments')->findAll();
-~~~
+```
 
 > Info|Информация: для Oracle имя таблицы с БД необходимо писать как
 > `comment@db2`, для MSSQL как `db2.dbo.comment`. В PostgreSQL кроссбазовые

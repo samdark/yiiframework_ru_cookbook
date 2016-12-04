@@ -14,8 +14,7 @@
 > Tip|Подсказка: Подробнее об именованных условиях можно прочитать в [руководстве по
                  Active Record](/doc/guide/ru/database.ar).
 
-~~~
-[php]
+```php
 class Post extends CActiveRecord {
     // параметры, применяемые по умолчанию
     public function defaultScope() {
@@ -32,17 +31,16 @@ class Post extends CActiveRecord {
         return $this;
     }
 }
-~~~
+```
 
 
 После этого, можно использовать следующий код:
-~~~
-[php]
+```php
 // выбираем все записи с языком, установленным в данный момент в приложении
 $posts = Post::model()->findAll();
 // выбираем все записи на английском
 $posts = Post::model()->lang('en')->findAll();
-~~~
+```
 
 ---
   - `Автор`: Александр Макаров, Sam Dark ([rmcreative.ru](http://rmcreative.ru/))

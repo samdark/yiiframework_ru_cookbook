@@ -5,8 +5,7 @@
 (среди них модель и контроллер), поведение несколько отличается от
 стандартного PHP и похоже больше на свойства C#.
 
-~~~
-[php]
+```php
 class MyModel extends CModel {
 	function getReadwrite(){
 		//…
@@ -24,12 +23,11 @@ class MyModel extends CModel {
         //…
     }
 }
-~~~
+```
 
 Такой класс определяет три свойства: readwrite, readonly и writeonly:
 
-~~~
-[php]
+```php
 $model = new MyModel();
 
 $model->readwrite = 'мы можем сюда писать';
@@ -40,7 +38,7 @@ echo $model->readwrite;
 echo $model->readonly;
 
 $model->writeonly = 'а сюда только писать';
-~~~
+```
 
 ---
   - `Автор`: Александр Макаров, Sam Dark ([rmcreative.ru](http://rmcreative.ru/))

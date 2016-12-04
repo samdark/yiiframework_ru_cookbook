@@ -11,8 +11,7 @@
 `User`) с `UserIdentity`. Поскольку в [[CUserIdentity]] нет никакого сложного
 функционала, отказаться от него просто. Вместо этого будем использовать интерфейс:
 
-~~~
-[php]
+```php
 class User extends CActiveRecord implements IUserIdentity
 {
 	private $_id;
@@ -128,7 +127,7 @@ class User extends CActiveRecord implements IUserIdentity
 		unset($this->_state[$name]);
 	}
 }
-~~~
+```
 
 ---
   - `Авторы`: [creocoder](http://yiiframework.ru/forum/memberlist.php?mode=viewprofile&u=722), Sam Dark ([rmcreative.ru](http://rmcreative.ru/))

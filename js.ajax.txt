@@ -8,8 +8,7 @@ AJAX в Yii
 
 Создадим новый контроллер AjaxController. Запустить его можно будет как `http://localhost/ajax/`.
 
-~~~
-[php]
+```php
 class AjaxController extends CController {
 	// actionIndex вызывается всегда, когда action не указан явно.
 	function actionIndex(){
@@ -32,14 +31,13 @@ class AjaxController extends CController {
 		}
     }
 }
-~~~
+```
 
 Форма
 -----
 
 Теперь опишем форму:
-~~~
-[php]
+```php
 <?php echo CHtml::form();
 
 echo CHtml::label('Текст', 'input');
@@ -65,7 +63,7 @@ array(
 ));
 
 echo CHtml::endForm();?>
-~~~
+```
 
 > Note|Примечание: Если на странице с [CHtml::ajaxSubmitButton] вне формы присутствуют
 другие AJAX-элементы, такие как [CHtml::ajaxLink], им следует задать id вручную,
@@ -79,8 +77,7 @@ AJAX фильтр
 соответствующий фильтр.
 
 Дополним контроллер, добавив ограничения на экшн index:
-~~~
-[php]
+```php
 class AjaxController extends CController {
     public function filters() {
         return array(
@@ -88,7 +85,7 @@ class AjaxController extends CController {
         );
     }
 }
-~~~
+```
 
 AJAX и CSRF
 -----------
@@ -97,8 +94,7 @@ AJAX и CSRF
 со значением `Yii::app()->request->csrfToken`. Например, для ссылки на удаление
 статьи, код будет выглядеть так:
 
-~~~
-[php]
+```php
 <?=CHtml::linkButton('Удалить', array(
     'submit'=>array(
         'articles/delete',
@@ -109,7 +105,7 @@ AJAX и CSRF
     ),
     'confirm'=>"Точно удалить?"
 ))?>
-~~~
+```
 
 ---
   - `Автор`: Александр Макаров, Sam Dark ([rmcreative.ru](http://rmcreative.ru/))

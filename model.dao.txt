@@ -19,8 +19,7 @@ Active Record в Yii довольно мощный и гибкий. Для св�
 храниться как в БД, так и в XML, кэше, Redis и т.д. В нашем случае, поскольку мы
 работаем с БД, один объект модели `Film` соответствует одной записи в бд.
 
-~~~
-[php]
+```php
 class Film extends CModel {
     public $id;
     public $name;
@@ -49,7 +48,7 @@ class Film extends CModel {
          return $this->comments;
     }
 }
-~~~
+```
 
 Фасад и фабрики
 ---------------
@@ -67,8 +66,7 @@ class Film extends CModel {
 в отдельных классах-фабриках методами для разных
 хранилищ данных (БД, XML, Sphinx и др.).
 
-~~~
-[php]
+```php
 class FilmManager {
     public function __construct(){
 
@@ -86,11 +84,10 @@ class FilmManager {
     public function getFilmById($id) {
     }
 }
-~~~
+```
 
 Создаём фабрики:
-~~~
-[php]
+```php
 class FilmDBManager extends FilmManager {
     public function getFilmById($id) {
         $db = Yii::app()->db;
@@ -111,22 +108,20 @@ class FilmDBManager extends FilmManager {
         return $film;
     }
 }
-~~~
+```
 
-~~~
-[php]
+```php
 class FilmXMLManager extends FilmManager {
     public  function getFilmById($id) {
        // берём из xml данные, создаем экземпляр класса Film
        return $film;
     }
 }
-~~~
+```
 
 Будем работать с фабриками через фасад:
 
-~~~
-[php]
+```php
 // получаем фильм из БД
 $film = FilmManager::factory()->getFilmById($id);
 echo $film->getName();
@@ -139,7 +134,7 @@ foreach($film->getComments() as $comment){
 // получаем фильм из XML
 $film = FilmManager::factory('XML')->getFilmById($id);
 echo $film->getName();
-~~~
+```
 
 В итоге имеем единый API, позволяющий получать объекты одного и того же типа,
 с возможностью быстрого переключения на другое хранилище данных.
@@ -151,8 +146,7 @@ echo $film->getName();
 логично возвращать не массивы, а типизированные коллекции.
 Создадим свой тип коллекции для хранения фильмов:
 
-~~~
-[php]
+```php
 class FilmCollection extends CList {
     // общее число фильмов
     private $totalCount;
@@ -172,7 +166,7 @@ class FilmCollection extends CList {
         return $this->totalCount;
     }
 }
-~~~
+```
 
 ---
   - `Авторы`: [pirrat](http://yiiframework.ru/forum/memberlist.php?mode=viewprofile&u=59), Sam Dark ([rmcreative.ru](http://rmcreative.ru/))

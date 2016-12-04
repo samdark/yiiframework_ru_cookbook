@@ -16,8 +16,7 @@
 
 Добавляем в наш файл отображения:
 
-~~~
-[php]
+```php
 <?php
 echo CHtml::form();
 echo CHtml::ajaxButton (
@@ -34,12 +33,11 @@ echo CHtml::ajaxButton (
 );
 echo CHtml::endForm();
 ?>
-~~~
+```
 
 Добавим немного CSS к нашим стилям:
 
-~~~
-[css]
+```css
 div.loading {
     background-color: #eee;
     background-image: url('loading.gif');
@@ -51,7 +49,7 @@ div.loading {
 div.loading * {
     opacity: .8;
 }
-~~~
+```
 
 ---
  - `Оригинал`: [http://www.yiiframework.com/doc/cookbook/46/](http://www.yiiframework.com/doc/cookbook/46/)

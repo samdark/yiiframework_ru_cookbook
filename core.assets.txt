@@ -17,7 +17,7 @@ Yii имеет встроенный механизм публикации рес
 -----------------------------
 
 После нескольких запусков приложения в `assets` образуется примерно следующее содержимое:
-~~~
+```
 assets
   1a6630a0\
     main.css
@@ -26,7 +26,7 @@ assets
   4ab2ffe\
     jquery.js
     …
-~~~
+```
 
 Папки вида `1a6630a0` создаются для предотвращения конфликта имён ресурсов.
 
@@ -67,39 +67,36 @@ assets
 
 ### JavaScript
 
-~~~
-[php]
+```php
 Yii::app()->clientScript->registerScriptFile(
     Yii::app()->assetManager->publish(
         Yii::getPathOfAlias('ext.myExtension.assets').'/main.js'
     ),
     CClientScript::POS_END
 );
-~~~
+```
 
 > Tip|Подсказка: вместо `Yii::app()->assetManager->publish()` можно использовать
 его синоним `CHtml::asset()`.
 
 ### CSS
 
-~~~
-[php]
+```php
 Yii::app()->clientScript->registerCssFile(
     Yii::app()->assetManager->publish(
         Yii::getPathOfAlias('ext.myExtension.assets').'/main.css'
     )
 );
-~~~
+```
 
 ### Изображение
 
-~~~
-[php]
+```php
 $url = Yii::app()->assetManager->publish(
     Yii::getPathOfAlias('ext.myExtension.assets').'/image.png'
 );
 echo CHtml::image($url);
-~~~
+```
 
 Получение путей и URL к уже опубликованным ресурсам
 ---------------------------------------------------

@@ -24,8 +24,7 @@
 занимается — это обработка HTTP запросов, передача данных модели
 и отображение представления.
 
-~~~
-[php]
+```php
 class ItemController extends Controller{
     public function actionUpdate($id=null){
         // в зависимости от аргумента создаем модель или ищем уже существующую
@@ -46,7 +45,7 @@ class ItemController extends Controller{
         $this->render('update',array('model'=>$model));
     }
 }
-~~~
+```
 
 Представление
 =============
@@ -55,8 +54,7 @@ class ItemController extends Controller{
 «[Как загрузить файл используя модель](http://yiiframework.ru/doc/cookbook/ru/form.file.upload)», то мы
 сделаем это через [CActiveForm].
 
-~~~
-[php]
+```php
 <?php
 /* @var $this ItemController */
 /* @var $model Item */
@@ -88,7 +86,7 @@ class ItemController extends Controller{
         <?php echo CHtml::submitButton($model->isNewRecord ? 'Создать' : 'Сохранить'); ?>
     </div>
 <?php $this->endWidget(); ?>
-~~~
+```
 
 Структура формы стандартная. Отображаем две подписи (`<label />`), одно текстовое поле,
 одно файловое поле, название файла (если он был загружен ранее) и кнопку отправки формы.
@@ -107,8 +105,7 @@ class ItemController extends Controller{
 `CActiveRecord::getIsNewRecord()` возвращает `false` и активным сценарием валидации
 по умолчанию является `update`.
 
-~~~
-[php]
+```php
 /**
  * @property integer $id
  * @property string $title
@@ -161,12 +158,11 @@ class Item extends CActiveRecord{
             unlink($documentPath);
     }
 }
-~~~
+```
 
 `DDL` таблицы для приведённой выше AR-модели:
 
-~~~
-[sql]
+```sql
 DROP TABLE IF EXISTS `tbl_item`;
 CREATE TABLE `tbl_item` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -174,7 +170,7 @@ CREATE TABLE `tbl_item` (
     `document` varchar(250) NOT NULL DEFAULT '',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-~~~
+```
 
 Поведение
 =========
@@ -182,8 +178,7 @@ CREATE TABLE `tbl_item` (
 Код для работы с файлом при необходимости можно вынести в поведение ([CActiveRecordBehavior]).
 Ниже представлен рабочий пример такого поведения:
 
-~~~
-[php]
+```php
 /**
  * @property string $savePath путь к директории, в которой сохраняем файлы
  */
@@ -251,15 +246,14 @@ class UploadableFileBehavior extends CActiveRecordBehavior{
             @unlink($filePath);
     }
 }
-~~~
+```
 
 В поведении мы делаем тоже самое, что и в модели ранее. Код для работы с файлом мы просто вынесли
 из модели в поведение, тем самым увеличили повторную используемость кода.
 
 Код модели теперь совсем простой:
 
-~~~
-[php]
+```php
 /**
  * @property integer $id
  * @property string $title
@@ -294,7 +288,7 @@ class Item extends CActiveRecord{
         );
     }
 }
-~~~
+```
 
 Заключение
 ==========

@@ -29,8 +29,7 @@
 [CModel::afterValidate], срабатывающий после успешной проверки формы. Этим можно
 воспользоваться, перекрыв метод в нашей модели `UserForm`:
 
-~~~
-[php]
+```php
 class UserForm extends CFormModel {
     public $firstName;
     public $lastName;
@@ -53,7 +52,7 @@ class UserForm extends CFormModel {
         return parent::afterValidate();
     }
 }
-~~~
+```
 
 Этот подход широко [используется при разработке поведений](/doc/guide/ru/extension.create)
 и своих моделей Active Record.
@@ -77,21 +76,19 @@ class UserForm extends CFormModel {
 
   Например:
 
-~~~
-[php]
+```php
 $component->attachEventHandler('onClick', create_function('$event', 'echo "Клик!";'));
-~~~
+```
 
 - В PHP 5.3 можно использовать
   [анонимные функции](http://ru2.php.net/manual/en/functions.anonymous.php)
   без create_function:
 
-~~~
-[php]
+```php
 $component->attachEventHandler('onClick', function($event){
     echo "Клик!";
 });
-~~~
+```
 
 > Note|Примечание: В случае использования `attachEventHandler` обработчик события заносится в список
 обработчиков последним.
@@ -105,39 +102,35 @@ $component->attachEventHandler('onClick', function($event){
 ### Альтернативный синтаксис
 
 Можно назначать обработчики непосредственно событиям:
-~~~
-[php]
+```php
 $component->onClick=$handler;
 // или:
 $component->onClick->add($handler);
-~~~
+```
 
 ### Использование getEventHandlers
 [CComponent::getEventHandlers] — очень полезный метод. Он возвращает для переданного
 параметром имени события список (объект [CList]) всех назначенных обработчиков события.
 
 Следующий код полностью повторяет метод `attachEventHandler`:
-~~~
-[php]
+```php
 $component->getEventHandlers('onClick')->add($handler);
-~~~
+```
 
 `getEventHandlers` удобно использовать в том случае, если важен порядок вызова
 обработчиков. Например, добавить обработчик первым в список можно
 следующим образом:
 
-~~~
-[php]
+```php
 $component->getEventHandlers('onClick')->insertAt(0, $handler);
-~~~
+```
 
 ### Удаление обработчика события
 Удалить определённый обработчик события можно при помощи метода [CComponent::detachEventHandler]:
 
-~~~
-[php]
+```php
 $component->detachEventHandler('onClick', $handler);
-~~~
+```
 
 Также можно получить список [CList] при помощи [CComponent::getEventHandlers] и
 уже из него удалить обработчики.
@@ -161,8 +154,7 @@ $component->detachEventHandler('onClick', $handler);
 можно использовать для сжатия кода страницы (всё-же, делать это лучше
 средствами веб-сервера):
 
-~~~
-[php]
+```php
 Yii::app()->onBeginRequest = function($event){
     return ob_start("ob_gzhandler");
 };
@@ -170,7 +162,7 @@ Yii::app()->onBeginRequest = function($event){
 Yii::app()->onEndRequest = function($event){
     return ob_end_flush();
 };
-~~~
+```
 
 > Info|Информация: чтобы найти все определённые в Yii события, ищите «`function on`»
 > в директории `framework`.
@@ -185,8 +177,7 @@ Yii::app()->onEndRequest = function($event){
 образом:
 
 `main.php`:
-~~~
-[php]
+```php
 …
 'components' => array(
 	…
@@ -197,25 +188,23 @@ Yii::app()->onEndRequest = function($event){
 	…
 )
 …
-~~~
+```
 
 Сам класс будет выглядеть так:
 
-~~~
-[php]
+```php
 class MyEventHandler {
 	public static function handleMissingTranslation($event){
 		// обрабатываем отсутствие перевода
 	}
 }
-~~~
+```
 
 Примерно так же можно поступить с событиями приложения. Отличие в том, что
 используется первый уровень вложенности в массиве конфигурации.
 
 `main.php`:
-~~~
-[php]
+```php
 'onBeginRequest' => function($event){
 	return ob_start();
 },
@@ -224,7 +213,7 @@ class MyEventHandler {
 	file_put_contents($fileName, $out);
 	return $out;
 }
-~~~
+```
 
 Своё событие
 ------------
@@ -233,8 +222,7 @@ class MyEventHandler {
 
 Задача — отослать почту при добавлении комментария к записи блога.
 
-~~~
-[php]
+```php
 class Post extends CModel {
     function addComment(Comment $comment){
         // добавляем в блог новый комментарий
@@ -266,23 +254,21 @@ class Notifier {
         }
     }
 }
-~~~
+```
 
 Назначаем оповещателя обработчиком:
 
-~~~
-[php]
+```php
 $postModel = Post::model()->findByPk(10);
 $notifier = new Notifier();
 $postModel->onNewComment = array($notifier, 'comment');
-~~~
+```
 
 Теперь при вызове
 
-~~~
-[php]
+```php
 $postModel->addComment($comment);
-~~~
+```
 
 будет выполнен метод `$notifier->comment`, который оповестит комментаторов о новом
 сообщении.

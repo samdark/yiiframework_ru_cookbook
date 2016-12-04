@@ -4,7 +4,7 @@
 Необходимо немного поменять конфиг nginx.
 
 Добавляем PATH_INFO:
-~~~
+```
 location ~ \.php {
     fastcgi_pass  127.0.0.1:9000;
     fastcgi_index index.php;
@@ -12,28 +12,28 @@ location ~ \.php {
     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
     fastcgi_param PATH_INFO $fastcgi_script_name;
 }
-~~~
+```
 
 Переписываем пути (для nginx >= 0.6.36):
-~~~
+```
 location /yiiGuestbook {
     try_files $uri $uri/ /yiiGuestbook/index.php?$query_string;
 }
-~~~
+```
 
 
 Переписываем пути (для nginx < 0.6.36):
-~~~
+```
 location /yiiGuestbook {
     if (!-e $request_filename){
         rewrite (.*) /yiiGuestbook/index.php/$1;
     }
 }
-~~~
+```
 
 Вот это должно быть в `fastcgi_params`
 
-~~~
+```
 fastcgi_param  QUERY_STRING       $query_string;
 fastcgi_param  REQUEST_METHOD     $request_method;
 fastcgi_param  CONTENT_TYPE       $content_type;
@@ -56,16 +56,16 @@ fastcgi_param  SERVER_NAME        $server_name;
 
 # PHP only, required if PHP was built with --enable-force-cgi-redirect
 fastcgi_param  REDIRECT_STATUS    200;
-~~~
+```
 
 Если вы не выносите приложение за корень, не лишним будет закрыть доступ к
 некоторым директориям:
 
-~~~
+```
 location ~ /(protected|themes/classic/views)/ {
     deny all;
 }
-~~~
+```
 
 Остальное делается также, как и в случае с Apache: [Красивые адреса URL](/doc/guide/ru/topics.url)
 

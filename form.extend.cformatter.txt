@@ -15,25 +15,23 @@
 
 Для GridView это может выглядеть так:
 
-~~~
-[php]
+```php
 array(
 	'name' => 'text',
 	'type' => 'raw',
 ),
-~~~
+```
 
 Для DetailView так:
 
-~~~
-[php]
+```php
 array(
 	'label' => 'Email',
 	'value' => ' email@email.com',
 	'type' => 'email',
 	'template' => "<tr class=\"{class}\"><th>{label}</th><td>{value}</td></tr>\n"
 ),
-~~~
+```
 
 Но, в основном, используется типы такие, как: `raw`, `email`, `image` да `url`.
 
@@ -42,8 +40,7 @@ array(
 
 В папке `protected/components` создадим новый файл `CCFormatter.php` с содержимым:
 
-~~~
-[php]
+```php
 <?php
 class CCFormatter extends CFormatter {
 	public $numOfWords = 5;
@@ -65,21 +62,19 @@ class CCFormatter extends CFormatter {
 		return $value;
 	}
 }
-~~~
+```
 
 В файл `config/main.php` секцию `components` добавим три строчки:
 
-~~~
-[php]
+```php
 'format' => array(
 	'class' => 'application.components.CCFormatter'
 ),
-~~~
+```
 
 После всех этих несложных манипуляций проверим работоспособность в `CDetailView`:
 
-~~~
-[php]
+```php
 array(
 	'label' => 'Текст',
 	'value' => 'Lorem Ipsum - это текст-"рыба", часто используемый в печати и
@@ -88,7 +83,7 @@ array(
 	'type' => 'ttext',
 	'template' => "<tr class=\"{class}\"><th>{label}</th><td>{value}</td></tr>\n"
 ),
-~~~
+```
 
 Стоит изучить
 -------------

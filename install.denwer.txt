@@ -17,10 +17,10 @@ Yii и Denwer
 - Отредактируйте `W:\usr\local\php5\php.ini` так, чтобы все пути были абсолютными
    от корня виртуального диска Denwer.
 
-~~~
+```
 extension_dir = "W:\usr\local\php5\ext\"
 session.save_path = "W:\tmp"
-~~~
+```
 
 - Иногда требуются некоторые dll (об этом будет написано в выводимых ошибках).
    Их необходимо найти и положить в папку PHP.
@@ -30,17 +30,17 @@ session.save_path = "W:\tmp"
 Поправим кодировку для отдаваемых данных по умолчанию.
 В `W:\usr\local\php5\php.ini` прописываем:
 
-~~~
+```
 default_charset = "utf-8"
-~~~
+```
 
 Поправим кодировку для работы с MySQL.
 В `W:\usr\local\mysql5\my.cnf`:
 
-~~~
+```
 default-character-set = utf8
 init-connect = "set names utf8"
-~~~
+```
 
 ---
   - `Автор`: Александр Макаров, Sam Dark ([rmcreative.ru](http://rmcreative.ru/))

@@ -6,8 +6,7 @@ HTTPS и Yii
 
 Первым делом реализуем удобное получение самой настройки из базы через
 `Yii::app()->user->useHttps`. Для этого расширим [CWebUser]:
-~~~
-[php]
+```php
 class WebUser extends CWebUser {
     private $_model = null;
 
@@ -25,26 +24,24 @@ class WebUser extends CWebUser {
         return $this->_model;
     }
 }
-~~~
+```
 
 Чтобы приложение использовало наш класс `WebUser`, необходимо сконфигурировать
 компонент `user`:
 
-~~~
-[php]
+```php
 'user'=>array(
     'class' => 'WebUser',
     // …
 ),
-~~~
+```
 
 > Tip|Подсказка: Точно таким же способом можно переопределить любой компонент Yii.
 
 Далее реализуем проверку настройки и установку нужного режима работы. Для этого
 создадим базовый контроллер:
 
-~~~
-[php]
+```php
 class BaseController extends CController {
 	function init(){
         // Если параметр не пуст и текущий режим не соответствует выставленному в настройках
@@ -65,7 +62,7 @@ class BaseController extends CController {
 		}
 	}
 }
-~~~
+```
 
 Все контроллеры нашего приложения необходимо наследовать от базового.
 

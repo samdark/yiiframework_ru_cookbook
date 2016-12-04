@@ -16,26 +16,25 @@
 Используем существующий метод контроллера. В этом случае выполняется одна из следующих команд
 в зависимости от версии и типа ОС:
 
-~~~
+```
 GET http://example.com/cron/
-~~~
+```
 
-~~~
+```
 wget -O - http://example.com/cron/
-~~~
+```
 
-~~~
+```
 lynx --dump http://example.com/cron/ >/dev/null
-~~~
+```
 
 Данный способ имеет большой минус: если по крону выполняются достаточно
 затратные действия, кто угодно при знании URL сможет сильно нагрузить сервер.
 
 Конечно, можно проверить какой-нибудь параметр непосредственно в действии контроллера:
-~~~
-[php]
+```php
 if($_GET['key']!='my_secret_key') die();
-~~~
+```
 
 Это несколько усложнит задачу злоумышленнику, но полностью проблемы не решит.
 
@@ -46,29 +45,26 @@ if($_GET['key']!='my_secret_key') die();
 для [консольного приложения](/doc/guide/ru/topics.console).
 
 Создаём команду в `/protected/commands/TestCommand.php`:
-~~~
-[php]
+```php
 class TestCommand extends CConsoleCommand {
     public function run($args) {
         // тут делаем то, что нам нужно
     }
 }
-~~~
+```
 
 Создаем файл `protected/cron.php` и указываем в нем пути к файлу `yiic.php` из директории фреймворка и 
 к отдельному файлу конфигурации. Выглядеть `cron.php` будет примерно так:
 
-~~~
-[php]
+```php
 $yiic=dirname(__FILE__).'/../framework/yiic.php';
 $config=dirname(__FILE__).'/config/cron.php';
 
 require_once($yiic);
-~~~
+```
 
 Копируем файл конфигурации `protected/config/console.php` в `protected/config/cron.php` и правим под наши нужды:
-~~~
-[php]
+```php
 return array(
     // У вас этот путь может отличаться. Можно подсмотреть в config/main.php.
     'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
@@ -106,13 +102,13 @@ return array(
 		),
     ),
 );
-~~~
+```
 
 
 На выполнение ставим:
-~~~
+```
 php /path/to/cron.php test
-~~~
+```
 Где `test` — имя нашей команды.
 
 ---

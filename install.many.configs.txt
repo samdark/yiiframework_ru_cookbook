@@ -15,8 +15,7 @@
 согласно которому оно будет работать. Этим можно воспользоваться:
 
 `index.php`:
-~~~
-[php]
+```php
 $webRoot=dirname(__FILE__);
 
 // Если хост равен localhost, то включаем режим отладки и подключаем отладочную
@@ -34,7 +33,7 @@ else {
 }
 
 $app = Yii::createWebApplication($configFile)->run();
-~~~
+```
 
 Подобным образом можно подключать файлы конфигурации в зависмости, например,
 от IP-адреса или наличия определённого cookie.
@@ -58,8 +57,7 @@ $app = Yii::createWebApplication($configFile)->run();
 Покажем наследование на примере `dev.php`. Для этого используем [CMap::mergeArray].
 
 `dev.php`:
-~~~
-[php]
+```php
 return CMap::mergeArray(
 	// наследуемся от main.php
     require(dirname(__FILE__).'/main.php'),
@@ -72,7 +70,7 @@ return CMap::mergeArray(
         ),
     )
 );
-~~~
+```
 
 Аналогичным образом поступим с `production.php`.
 

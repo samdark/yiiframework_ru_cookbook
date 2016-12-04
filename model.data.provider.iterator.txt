@@ -29,8 +29,7 @@
 
 Предположим, что модель пользователя сайта выглядит следующим образом:
 
-~~~
-[php]
+```php
 /**
  * @property integer $id
  * @property string $username
@@ -49,12 +48,11 @@ class User extends CActiveRecord{
 		return '{{user}}';
 	}
 }
-~~~
+```
 
 `DDL` (`MySQL`) для данной модели выглядит так:
 
-~~~
-[sql]
+```sql
 DROP TABLE IF EXISTS tbl_user;
 CREATE TABLE tbl_user (
     id INT(11) NOT NULL AUTO_INCREMENT,
@@ -62,7 +60,7 @@ CREATE TABLE tbl_user (
     rating INT(11) NOT NULL,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-~~~
+```
 
 Решение задачи и описание
 =========================
@@ -73,8 +71,7 @@ PHP-файле на диске.
 
 Консольная команда, решающая описанную задачу выглядит следующим образом:
 
-~~~
-[php]
+```php
 <?php
 
 /**
@@ -133,7 +130,7 @@ class UserCommand extends CConsoleCommand{
 			"<?php\n\nreturn ".var_export($results,true).";\n",LOCK_EX);
 	}
 }
-~~~
+```
 
 Резюме
 ======

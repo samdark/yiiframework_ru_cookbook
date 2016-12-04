@@ -10,19 +10,19 @@ RBAC и описание ролей в файле
 полем `role`. Затем проверить доступ.
 
 Первым делом настроим сам компонент. `protected/config/main.php`:
-~~~
-[php]
+
+```php
 'authManager' => array(
     // Будем использовать свой менеджер авторизации
     'class' => 'PhpAuthManager',
     // Роль по умолчанию. Все, кто не админы, модераторы и юзеры — гости.
     'defaultRoles' => array('guest'),
 ),
-~~~
+```
 
 Опишем `protected/config/auth.php`:
-~~~
-[php]
+
+```php
 return array(
 	'guest' => array(
 		'type' => CAuthItem::TYPE_ROLE,
@@ -58,12 +58,12 @@ return array(
 		'data' => null
 	),
 );
-~~~
+```
 
 Сделаем, чтобы `Yii::app()->user->id` возвращала id пользователя. Для этого немного
 изменим класс `UserIdentity`. `protected/components/UserIdentity.php`:
-~~~
-[php]
+
+```php
 class UserIdentity extends CUserIdentity {
     // Будем хранить id.
     protected $_id;
@@ -95,12 +95,12 @@ class UserIdentity extends CUserIdentity {
         return $this->_id;
     }
 }
-~~~
+```
 
 Далее реализуем получение роли из БД при использовании `Yii::app()->user->role`.
 Для этого расширим [CWebUser]. `protected/components/WebUser.php`:
-~~~
-[php]
+
+```php
 class WebUser extends CWebUser {
     private $_model = null;
 
@@ -118,26 +118,24 @@ class WebUser extends CWebUser {
         return $this->_model;
     }
 }
-~~~
+```
 
 Чтобы приложение использовало наш класс `WebUser`, необходимо сконфигурировать
 компонент `user`:
 
-~~~
-[php]
+```php
 'user'=>array(
     'class' => 'WebUser',
     // …
 ),
-~~~
+```
 
 > Tip|Подсказка: Точно таким же способом можно переопределить любой компонент Yii.
 
 Теперь у нас есть набор ролей и мы знаем роль пользователя. Осталось связать их.
 Для этого создадим класс `PhpAuthManager`. `protected/components/PhpAuthManager.php`:
 
-~~~
-[php]
+```php
 class PhpAuthManager extends CPhpAuthManager{
     public function init(){
         // Иерархию ролей расположим в файле auth.php в директории config приложения
@@ -155,16 +153,15 @@ class PhpAuthManager extends CPhpAuthManager{
         }
     }
 }
-~~~
+```
 
 Теперь можно пользоваться:
 
-~~~
-[php]
+```php
 if(Yii::app()->user->checkAccess('administrator')){
     echo "hello, I'm administrator";
 }
-~~~
+```
 
 Также можно проверять права в методе `accessRules`, как показано [в руководстве](http://yiiframework.ru/doc/guide/ru/topics.auth).
 
@@ -176,8 +173,7 @@ if(Yii::app()->user->checkAccess('administrator')){
 Приложение 1: модель `User`:
 ----------------------------
 
-~~~
-[php]
+```php
 <?php
 /**
  * Модель User
@@ -206,7 +202,7 @@ class User extends CActiveRecord {
 		return parent::beforeSave();
 	}
 }
-~~~
+```
 
 ---
   - `Автор`: Александр Макаров, Sam Dark ([rmcreative.ru](http://rmcreative.ru/))

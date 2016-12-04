@@ -10,22 +10,20 @@
 
 В отображение формы `_form.php` добавляем:
 
-~~~
-[php]
+```php
 <?if(CCaptcha::checkRequirements() && Yii::app()->user->isGuest):?>
     <?=CHtml::activeLabelEx($model, 'verifyCode')?>
     <?$this->widget('CCaptcha')?>
     <?=CHtml::activeTextField($model, 'verifyCode')?>
 <?endif?>
-~~~
+```
 
 Здесь `$model` — модель, которая используется в форме. Авторизованным пользователям
 картинку с кодом не показываем.
 
 В модель добавляем:
 
-~~~
-[php]
+```php
 class Comment extends CActiveRecord {
     // результат проверки
     public $verifyCode;
@@ -47,12 +45,11 @@ class Comment extends CActiveRecord {
         );
     }
 }
-~~~
+```
 
 В контроллер, который выводит форму, добавляем:
 
-~~~
-[php]
+```php
 class PostController extends CController {
     public function filters() {
         return array(
@@ -82,7 +79,7 @@ class PostController extends CController {
         );
     }
 }
-~~~
+```
 
 Стоит изучить
 -------------

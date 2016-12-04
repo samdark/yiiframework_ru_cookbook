@@ -54,13 +54,13 @@ SeleniumRC и PHPUnit.
   1. Устанавливаем [Xdebug](http://www.xdebug.org/docs/install).
   2. В `php.ini` добавляем:
 
-~~~
+```
 zend_extension = "C:\xampp\php\ext\php_xdebug.dll"
 xdebug.remote_enable = 1
 xdebug.remote_handler = "dbgp"
 xdebug.remote_host = "localhost"
 xdebug.remote_port = 9000
-~~~
+```
 
 Отладку можно начать нажав `Ctrl-F5`.
 

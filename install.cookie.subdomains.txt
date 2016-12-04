@@ -9,28 +9,25 @@ Cookie на поддоменах
 
 Чтобы избежать такого досадного недоразумения необходимо добавить в конфигурационный файл (например: `protected\config\main.php`), в секцию `components`, следующий код:
 
-~~~
-[php]
+```php
 'session' => array(
     'cookieParams' => array('domain' => '.domain_site.ru'),
 ),
-~~~
+```
 
 и
 
-~~~
-[php]
+```php
 'user' => array(
     // enable cookie-based authentication
     'allowAutoLogin' => true,
     'identityCookie' => array('domain' => '.domain_site.ru'),
 ),
-~~~
+```
 
 В итоге должно выглядеть так:
 
-~~~
-[php]
+```php
 ...
 // application components
 'components' => array(
@@ -47,7 +44,7 @@ Cookie на поддоменах
     ...
 ),
 ...
-~~~
+```
 
 > Note|Примечание: После внесённых изменений необходимо очистить cookie в браузере и очистить кэш сайта.
 
@@ -55,17 +52,15 @@ Cookie на поддоменах
 
 Однако, можно задать свою папку для хранения кэша. Для этого необходимо после строки:
 
-~~~
-[php]
+```php
 'basePath' => dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-~~~
+```
 
 Добавить код:
 
-~~~
-[php]
+```php
 'runtimePath' => Yii::getPathOfAlias('system').'/../my_cache_folder/',
-~~~
+```
 
 После изменений кэш будет храниться от "корня" сайта (где находится index.php) в папке "my_cache_folder".
 
