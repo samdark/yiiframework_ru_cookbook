@@ -194,7 +194,7 @@ array(
 
 Это стоит изучить
 -----------------
-- [Работа с формами → Создание модели](/doc/guide/ru/form.model)
+- [Работа с формами → Создание модели](/doc/guide/1.1/ru/form.model)
 - [CModel::validate()]
 - [CModel::rules()]
 - [CModel::scenario]
